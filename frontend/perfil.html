@@ -60,7 +60,6 @@
     }
     .btn-back:hover { background: rgba(255,255,255,0.05); color: var(--text-main); }
     
-    /* Estilo do Botão Admin */
     .btn-admin {
       background: rgba(255, 215, 0, 0.1);
       color: #ffd700;
@@ -70,7 +69,7 @@
       cursor: pointer;
       font-weight: 600;
       transition: 0.2s;
-      display: none; /* Começa invisível */
+      display: none;
       align-items: center; gap: 6px;
       text-decoration: none;
       font-size: 0.9rem;
@@ -396,8 +395,7 @@
     const db = getFirestore(app);
 
     // ============================================
-    // CONFIGURAÇÃO DE ADMIN
-    // Coloque aqui o email de quem pode ver o botão admin
+    // config do admin emails
     // ============================================
     const LISTA_ADMINS = [
         "gabrielmiller820@gmail.com", 
@@ -407,7 +405,6 @@
     let currentUserUid = null;
     let currentUserRef = null;
 
-    // Elementos da UI
     const uiNome = document.getElementById('ui-nome');
     const uiBio = document.getElementById('ui-bio');
     const uiNivel = document.getElementById('ui-nivel');
@@ -422,7 +419,6 @@
     const loadingScreen = document.getElementById('loading-screen');
     const btnAdmin = document.getElementById('btn-admin');
 
-    // Elementos do Modal
     const modal = document.getElementById('edit-modal');
     const editNome = document.getElementById('edit-nome');
     const editBio = document.getElementById('edit-bio');
@@ -434,11 +430,10 @@
             currentUserUid = user.uid;
             currentUserRef = doc(db, "users", currentUserUid);
             
-            // VERIFICA SE O EMAIL ESTÁ NA LISTA DE ADMINS
             if (LISTA_ADMINS.includes(user.email)) {
-                btnAdmin.style.display = 'flex'; // Mostra o botão
+                btnAdmin.style.display = 'flex';
             } else {
-                btnAdmin.style.display = 'none'; // Esconde o botão
+                btnAdmin.style.display = 'none';
             }
 
             const creationDate = new Date(user.metadata.creationTime);
@@ -464,25 +459,17 @@
     function atualizarTela(data) {
         uiNome.innerText = data.nome || "Estudante";
         uiBio.innerText = data.bio || "Sem biografia.";
-        
-        // ============================================
-        // NOVA LÓGICA DE NÍVEL E XP
-        // ============================================
+
         const xpTotal = Number(data.xp) || 0;
         
-        // Calcula o nível baseado apenas no XP Total (cada 100 XP = 1 Nível)
-        // Ex: 0-99xp = Nível 1 | 100-199xp = Nível 2 | 200xp = Nível 3
         const nivelCalculado = Math.floor(xpTotal / 100) + 1;
         
-        // Calcula quanto XP o usuário tem dentro desse nível (o resto da divisão por 100)
         const xpNoNivelAtual = xpTotal % 100;
-        const xpParaProximoNivel = 100; // Meta fixa de 100
+        const xpParaProximoNivel = 100;
         
-        // Atualiza UI
         uiNivel.innerText = nivelCalculado;
         uiXP.innerText = xpTotal;
 
-        // Títulos baseados no nível calculado
         let titulo = "Novato";
         if(nivelCalculado >= 5) titulo = "Explorador";
         if(nivelCalculado >= 10) titulo = "Veterano";
@@ -500,7 +487,6 @@
             uiInstaLink.style.display = "none";
         }
 
-        // Barra de progresso (0 a 100%)
         let percentage = (xpNoNivelAtual / xpParaProximoNivel) * 100;
         uiProgress.style.width = `${percentage}%`;
         uiXpNext.innerText = `${xpNoNivelAtual} / ${xpParaProximoNivel} XP`;
