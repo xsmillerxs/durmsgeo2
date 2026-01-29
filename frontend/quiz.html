@@ -431,18 +431,15 @@
                 if (userSnap.exists()) {
                     const userData = userSnap.data();
                     
-                    // Exibe nome do usuário
                     elWelcomeMsg.textContent = `Jogando como: ${userData.nome || user.email}`;
 
-                    // VERIFICAÇÃO CRÍTICA: Já fez o quiz?
                     if (userData.quizDone === true) {
-                        vBlocked.style.display = "block"; // Bloqueia
+                        vBlocked.style.display = "block";
                     } else {
-                        vActive.style.display = "block"; // Libera
-                        loadQuestion(); // Carrega primeira pergunta
+                        vActive.style.display = "block";
+                        loadQuestion();
                     }
                 } else {
-                    // Documento não existe (raro se o cadastro for feito corretamente), mas libera o quiz
                     vActive.style.display = "block";
                     loadQuestion();
                 }
@@ -453,14 +450,11 @@
             }
 
         } else {
-            // USUÁRIO NÃO LOGADO (VISITANTE)
             console.log("Nenhum usuário logado.");
             vVisitor.style.display = "block";
         }
     });
-
-    // --- LÓGICA DO QUIZ ---
-
+    
     function loadQuestion() {
       answered = false;
       elNextBtn.disabled = true;
