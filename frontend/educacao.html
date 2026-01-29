@@ -1,0 +1,593 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Educação - Durmsgeo IFRN</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="css/style.css">
+
+  <style>
+    :root {
+      --primary: #05df34;       
+      --primary-dark: #004d40;
+      --accent: #FFC107;        
+      --bg-body: #0e0d0d;
+      --bg-section-alt: #1a1a1a;
+      --bg-card: #151515;
+      --text-main: #f1f5f9;      
+      --text-muted: #94a3b8;     
+      --nav-bg: rgba(255, 255, 255, 0.85);
+      --nav-border: rgba(0,0,0,0.05);
+      --card-border: rgba(255, 255, 255, 0.1);
+      --shadow-card: 0 10px 15px -3px rgba(0, 0, 0, 0.5);
+      --radius: 16px;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: var(--bg-body);
+      color: var(--text-main);
+      line-height: 1.6;
+      overflow-x: hidden;
+      transition: zoom 0.3s ease;
+    }
+
+    .container { max-width: 1100px; margin: 0 auto; padding: 0 20px; }
+
+    .hamburger {
+        display: none; 
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        z-index: 2001;
+        background: rgba(0,0,0,0.6);
+        backdrop-filter: blur(5px);
+        border: 1px solid var(--primary);
+        border-radius: 8px;
+        width: 45px;
+        height: 45px;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 5px;
+        cursor: pointer;
+        padding: 8px;
+    }
+    
+    .hamburger span {
+        display: block;
+        width: 25px;
+        height: 3px;
+        background-color: var(--primary);
+        border-radius: 2px;
+        transition: 0.3s;
+    }
+
+    .hamburger.active span:nth-child(1) { transform: translateY(8px) rotate(45deg); }
+    .hamburger.active span:nth-child(2) { opacity: 0; }
+    .hamburger.active span:nth-child(3) { transform: translateY(-8px) rotate(-45deg); }
+
+    .site-nav {
+      position: sticky; top: 20px; margin: 0 auto; width: 90%; max-width: 1000px;
+      background: var(--nav-bg); backdrop-filter: blur(12px); padding: 15px 30px;
+      border-radius: 50px; display: flex; justify-content: center; gap: 25px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1); z-index: 1000; border: 1px solid var(--nav-border);
+      transition: all 0.4s ease;
+    }
+    .site-nav a { text-decoration: none; color: #1a1a1a; font-weight: 600; font-size: 0.95rem; transition: 0.3s; position: relative; }
+    .site-nav a:hover { color: var(--primary); }
+    .site-nav a::after { content: ''; position: absolute; width: 0; height: 2px; bottom: -4px; left: 0; background-color: var(--accent); transition: width 0.3s; }
+    .site-nav a:hover::after { width: 100%; }
+
+    .hero-outer {
+      background: radial-gradient(circle at top right, #00695c, #004d40);
+      color: white; padding: 40px 0 80px 0; position: relative; overflow: hidden;
+      border-bottom-left-radius: 60px; border-bottom-right-radius: 60px; border-bottom: 4px solid var(--accent);
+    }
+    .blob { position: absolute; background: rgba(255, 255, 255, 0.05); border-radius: 50%; animation: float 20s infinite ease-in-out; z-index: 0; }
+    .blob-1 { width: 400px; height: 400px; top: -100px; left: -100px; }
+    .blob-2 { width: 300px; height: 300px; bottom: -50px; right: -50px; }
+    @keyframes float { 0%, 100% { transform: translate(0, 0); } 50% { transform: translate(30px, 40px); } }
+
+    .hero { display: flex; align-items: center; justify-content: space-between; max-width: 1200px; margin: 0 auto; padding: 40px 20px; position: relative; z-index: 1; gap: 40px; flex-wrap: wrap; }
+    .hero-content { flex: 1; min-width: 300px; }
+    .brand-logos { display: flex; gap: 20px; margin-bottom: 30px; align-items: center; }
+    .brand-logos img { height: 60px; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.2)); }
+    
+    .hero-title { 
+      font-size: 3rem; 
+      font-weight: 900; 
+      line-height: 1.1; 
+      margin-bottom: 15px; 
+      background: linear-gradient(to right, #ffffff, #FFC107); 
+      background-clip: text; 
+      -webkit-background-clip: text; 
+      -webkit-text-fill-color: transparent; 
+    }
+    
+    .hero-sub { font-size: 1.2rem; color: rgba(255,255,255,0.9); margin-bottom: 40px; max-width: 500px; }
+    .hero-visual img { max-width: 100%; height: auto; animation: gentle-float 6s ease-in-out infinite; }
+    @keyframes gentle-float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
+
+    .section { padding: 80px 0; }
+    .section-alt { background: var(--bg-section-alt); }
+    h2 { font-size: 2.2rem; margin-bottom: 25px; color: var(--primary); }
+
+    .edu-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px; margin-top: 30px; }
+    .edu-card {
+      background: var(--bg-card); padding: 30px; border-radius: var(--radius);
+      box-shadow: var(--shadow-card); border: 1px solid var(--card-border);
+      transition: all 0.3s ease; position: relative; overflow: hidden;
+    }
+    .edu-card:hover { transform: translateY(-5px); border-color: var(--primary); }
+    .edu-card h3 { color: var(--primary); margin-bottom: 15px; font-size: 1.3rem; display: flex; align-items: center; gap: 10px; }
+    .edu-card p { color: var(--text-muted); font-size: 0.95rem; }
+
+    .action-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin-top: 40px; }
+    .action-box {
+      background: var(--bg-card); padding: 25px; border-radius: 12px;
+      border: 1px solid var(--card-border); position: relative;
+    }
+    .action-box h4 { margin-top: 0; font-size: 1.1rem; text-transform: uppercase; margin-bottom: 15px; display: inline-block; padding: 5px 10px; border-radius: 4px; color: #000; font-weight: 800; }
+    .box-green { border-left: 5px solid #00c853; } .box-green h4 { background: #00c853; }
+    .box-yellow { border-left: 5px solid #ffd600; } .box-yellow h4 { background: #ffd600; }
+    .box-blue { border-left: 5px solid #2962ff; } .box-blue h4 { background: #2962ff; color: #fff; }
+    .action-box ul { list-style: none; padding: 0; }
+    .action-box li { margin-bottom: 10px; color: var(--text-muted); padding-left: 20px; position: relative; }
+    .action-box li::before { content: '•'; position: absolute; left: 0; color: white; font-weight: bold; }
+
+    .map-cta {
+      background: linear-gradient(135deg, rgba(5, 223, 52, 0.1), rgba(0, 77, 64, 0.2));
+      border: 1px solid rgba(5, 223, 52, 0.3); border-radius: 20px;
+      padding: 50px; text-align: center; margin-top: 40px;
+    }
+    .btn-map {
+      background: var(--primary); color: #000; padding: 12px 30px; border-radius: 50px;
+      text-decoration: none; font-weight: 800; display: inline-block; margin-top: 20px; transition: 0.3s;
+    }
+    .btn-map:hover { transform: scale(1.05); background: #00e676; box-shadow: 0 0 15px rgba(0, 230, 118, 0.4); }
+
+    .footer { background: #050b14; color: #64748b; text-align: center; padding: 40px 20px; border-top: 1px solid rgba(255,255,255,0.05); }
+
+    .controls-wrapper { position: fixed; bottom: 30px; right: 20px; z-index: 2000; display: flex; flex-direction: column; gap: 15px; align-items: center; }
+    .btn-float { width: 50px; height: 50px; border-radius: 50%; background: var(--primary); border: none; color: white; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 10px rgba(0,0,0,0.3); transition: 0.2s; }
+    .btn-float:hover { transform: scale(1.1); background: var(--primary-dark); }
+    .btn-float svg { width: 24px; height: 24px; fill: currentColor; }
+    .zoom-menu { display: none; flex-direction: column; gap: 8px; margin-bottom: 5px; background: rgba(0,0,0,0.8); padding: 8px; border-radius: 25px; border: 1px solid var(--primary); animation: fadeIn 0.3s ease; }
+    .zoom-menu.active { display: flex; }
+    .zoom-btn { width: 35px; height: 35px; border-radius: 50%; background: #333; color: var(--primary); border: 1px solid var(--primary); font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; }
+    .zoom-btn:hover { background: var(--primary); color: #000; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+    .tab-container { margin-top: 60px; }
+    .tab-nav { display: flex; justify-content: center; gap: 10px; margin-bottom: 30px; flex-wrap: wrap; }
+    .tab-btn {
+      background: transparent;
+      border: 1px solid var(--card-border);
+      color: var(--text-muted);
+      padding: 12px 24px;
+      border-radius: 50px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      font-size: 1rem;
+    }
+    .tab-btn:hover { border-color: var(--primary); color: var(--text-main); }
+    .tab-btn.active { background: var(--primary); color: #000; border-color: var(--primary); box-shadow: 0 0 15px rgba(5, 223, 52, 0.3); }
+    
+    .tab-content { display: none; animation: fadeIn 0.5s ease; }
+    .tab-content.active { display: block; }
+
+    .flip-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; }
+    .flip-card {
+      background-color: transparent;
+      width: 100%;
+      height: 400px; /* Aumentado um pouco para caber o texto extra */
+      perspective: 1000px;
+    }
+    .flip-inner {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      text-align: center;
+      transition: transform 0.8s;
+      transform-style: preserve-3d;
+      cursor: pointer;
+    }
+    .flip-card:hover .flip-inner { transform: rotateY(180deg); }
+    .flip-front, .flip-back {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      -webkit-backface-visibility: hidden;
+      backface-visibility: hidden;
+      border-radius: var(--radius);
+      padding: 30px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      box-shadow: var(--shadow-card);
+    }
+    .flip-front {
+      background: var(--bg-card);
+      border: 1px solid var(--primary);
+      color: var(--text-main);
+    }
+    .flip-back {
+      background: linear-gradient(135deg, #004d40, #00695c);
+      color: white;
+      transform: rotateY(180deg);
+      border: 1px solid var(--accent);
+      font-size: 0.9rem;
+      text-align: left;
+    }
+    .flip-icon { font-size: 3rem; margin-bottom: 15px; display: block; }
+
+    @media (max-width: 768px) { 
+        .hero-title { font-size: 2.2rem; } 
+        .hero { flex-direction: column-reverse; text-align: center; } 
+        
+        .hamburger { display: flex; }
+
+        .site-nav { 
+            position: fixed;
+            top: 0; 
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: rgba(10, 10, 10, 0.98);
+            border-radius: 0;
+            margin: 0;
+            transform: translateX(100%); 
+            opacity: 0;
+            transition: all 0.4s ease;
+        }
+
+        .site-nav.active {
+            transform: translateX(0);
+            opacity: 1;
+        }
+
+        .site-nav a {
+            font-size: 1.5rem;
+            margin: 10px 0;
+            color: #fff;
+        }
+    }
+  </style>
+</head>
+
+<body>
+
+  <button class="hamburger" id="hamburgerBtn" aria-label="Abrir Menu">
+     <span></span>
+     <span></span>
+     <span></span>
+  </button>
+
+  <div class="controls-wrapper">
+    <div id="zoomMenu" class="zoom-menu">
+        <button class="zoom-btn" onclick="changeZoom(10)" title="Aumentar">+</button>
+        <button class="zoom-btn" onclick="resetZoom()" title="Resetar">↺</button>
+        <button class="zoom-btn" onclick="changeZoom(-10)" title="Diminuir">-</button>
+    </div>
+
+    <button class="btn-float" onclick="toggleZoomMenu()" title="Ajustar Zoom">
+       <svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+    </button>
+
+    <button class="btn-float" id="btn-mic-speak" title="Ouvir Texto">
+      <svg viewBox="0 0 24 24"><path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z"/><path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z"/></svg>
+    </button>
+  </div>
+
+  <header class="hero-outer">
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+
+    <nav class="site-nav" id="navMenu" role="navigation">
+      <a href="index.html" onclick="toggleMenu()">Início</a>
+      <a href="quem-somos.html" onclick="toggleMenu()">Quem Somos</a>
+      <a href="entenda-problema.html" onclick="toggleMenu()">Problemas</a>
+      <a href="educacao.html" style="color:var(--primary); font-weight:700;" onclick="toggleMenu()">Educação</a> 
+      <a href="solucao.html" onclick="toggleMenu()">Soluções</a>
+      <a href="mapa-risco.html" onclick="toggleMenu()">Mapa</a>
+      <a href="quiz.html" onclick="toggleMenu()">Quiz</a>
+    </nav>
+
+    <div class="hero">
+      <div class="hero-content">
+        <div class="brand-logos">
+        <img src="assets/logo2.png" alt="Logo Lateral">
+        <img src="assets/image.png" alt="Logo Principal">
+        <img src="assets/aliança.jpg" alt="Logo Lateral">
+        <img src="assets/if.png" alt="Logo Lateral">
+        </div>
+        <h1 class="hero-title">Educação e Prevenção</h1>
+        <p class="hero-sub">A informação é a ferramenta mais poderosa. Saiba como agir antes, durante e depois das chuvas para proteger sua família.</p>
+        <div class="hero-ctas">
+          <a class="btn" href="#guia" style="background:var(--accent); color:#004d40; padding:14px 32px; border-radius:50px; text-decoration:none; font-weight:700; display:inline-block;">Ver Guia de Ação</a>
+        </div>
+      </div>
+      <div class="hero-visual">
+        <img src="assets/logo.png" alt="Ilustração Educação">
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="section">
+      <div class="container">
+        <h2>Por que se informar?</h2>
+        <p style="color: #ccc; max-width: 800px; margin-bottom: 40px;">Alagamentos são agravados por ações humanas. Pequenas mudanças de hábito na comunidade podem reduzir drasticamente os riscos.</p>
+        
+        <div class="edu-grid">
+          <div class="edu-card">
+            <h3>🚧 Causas</h3>
+            <p>O lixo descartado incorretamente entope bueiros e galerias, impedindo o escoamento natural da água.</p>
+          </div>
+          <div class="edu-card">
+            <h3>⚠️ Riscos</h3>
+            <p>Águas de enchente misturam esgoto e sujeira, transmitindo doenças graves como a Leptospirose.</p>
+          </div>
+          <div class="edu-card">
+            <h3>🤝 Cidadania</h3>
+            <p>Denunciar descartes irregulares e manter a frente da sua casa limpa são atos de proteção coletiva.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-alt">
+        <div class="container">
+            <h2>Tópicos Importantes</h2>
+            <p style="color: #ccc; margin-bottom: 40px;">Selecione uma aba para ver orientações baseadas nas cartilhas do CFQ.</p>
+
+            <div class="tab-container">
+              <div class="tab-nav">
+                <button class="tab-btn active" onclick="openTab(event, 'conscientize')">Conscientize-se</button>
+                <button class="tab-btn" onclick="openTab(event, 'pragas')">Pragas e Vetores</button>
+                <button class="tab-btn" onclick="openTab(event, 'verde')">Áreas Verdes</button>
+              </div>
+
+              <div id="conscientize" class="tab-content active">
+                <h3 style="color: var(--primary); margin-bottom: 20px;">Como enfrentar estragos causados por chuvas e enchentes</h3>
+                <p style="color: var(--text-muted); margin-bottom: 30px;">Orientações técnicas para o retorno seguro ao lar. Passe o mouse para ver os detalhes.</p>
+                                
+                <div class="flip-grid">
+                  <div class="flip-card">
+                    <div class="flip-inner">
+                      <div class="flip-front">
+                        <span class="flip-icon">🏠</span>
+                        <h3>Volta para Casa</h3>
+                        <p>Segurança elétrica e física.</p>
+                      </div>
+                      <div class="flip-back">
+                        <h3 style="font-size:1.1rem; color:var(--accent);">Segurança em 1º Lugar</h3>
+                        <ul style="padding-left:15px; font-size:0.85rem;">
+                            <li>Verifique se a casa não foi interditada pela <strong>Defesa Civil</strong>.</li>
+                            <li>Desligue a rede elétrica para evitar choques com fios caídos.</li>
+                            <li>Evite contato direto com água ou lama. Use botas e luvas; na falta deles, improvise com sacos plásticos duplos.</li>
+                            <li>Em caso de ferimentos, vacine-se contra o tétano.</li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="flip-card">
+                    <div class="flip-inner">
+                      <div class="flip-front">
+                        <span class="flip-icon">🪣</span>
+                        <h3>Limpeza e Desinfecção</h3>
+                        <p>Como limpar corretamente?</p>
+                      </div>
+                      <div class="flip-back">
+                        <h3 style="font-size:1.1rem; color:var(--accent);">Produtos e Métodos</h3>
+                        <ul style="padding-left:15px; font-size:0.85rem;">
+                            <li><strong>Nunca misture saneantes</strong> por conta própria (risco de intoxicação).</li>
+                            <li>Descarte itens absorventes (colchões, sofás).</li>
+                            <li>Metais e vidros: limpe com água e sabão, depois desinfete com solução de água sanitária (2 a 2,5% - use <strong>2 colheres de sopa por litro</strong> de água).</li>
+                            <li>Descarte vassouras e panos usados na limpeza pesada.</li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="flip-card">
+                    <div class="flip-inner">
+                      <div class="flip-front">
+                        <span class="flip-icon">💧</span>
+                        <h3>Água e Alimentos</h3>
+                        <p>Cuidados para consumo.</p>
+                      </div>
+                      <div class="flip-back">
+                        <h3 style="font-size:1.1rem; color:var(--accent);">Consumo Seguro</h3>
+                        <ul style="padding-left:15px; font-size:0.85rem;">
+                            <li>Jogue fora alimentos que tocaram a água da enchente.</li>
+                            <li>Beba apenas água potável. Na dúvida, filtre e ferva por 5 min ou adicione <strong>2 gotas de hipoclorito</strong> de sódio por litro e espere 30 min.</li>
+                            <li>Limpe a caixa d'água: esvazie, limpe, encha com água + água sanitária, espere 30 min e enxágue.</li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div id="pragas" class="tab-content">
+                <h3 style="color: var(--primary); margin-bottom: 20px;">Enfrentando vetores e pragas urbanas</h3>
+                <p style="color: var(--text-muted); margin-bottom: 30px;">
+                    Os quatro fatores que causam a proliferação de pragas são os <strong>4 A's</strong>: Água, Alimento, Abrigo e Acesso.
+                </p>
+                                
+                <div class="edu-grid">
+                  <div class="edu-card" style="border-left: 4px solid var(--accent);">
+                    <h3>🦟 1. Água (Vetores)</h3>
+                    <p>A água parada é o principal criadouro de mosquitos como o da Dengue.</p>
+                    <ul style="margin-top:10px; padding-left:20px; color:var(--text-muted); font-size:0.9rem;">
+                        <li>Vistorie calhas periodicamente.</li>
+                        <li>Mantenha caixas d'água vedadas e realize limpeza a cada 6 meses.</li>
+                        <li>Elimine objetos no quintal que acumulem água.</li>
+                    </ul>
+                  </div>
+
+                  <div class="edu-card" style="border-left: 4px solid var(--accent);">
+                    <h3>🍲 2. Alimento (Atração)</h3>
+                    <p>Restos de comida atraem ratos, baratas e formigas.</p>
+                    <ul style="margin-top:10px; padding-left:20px; color:var(--text-muted); font-size:0.9rem;">
+                        <li>Acondicione o lixo em sacos plásticos fechados e descarte em local adequado.</li>
+                        <li>Limpe a caixa de gordura regularmente (15 dias a 3 meses).</li>
+                        <li>Não deixe migalhas no chão.</li>
+                    </ul>
+                  </div>
+
+                  <div class="edu-card" style="border-left: 4px solid var(--accent);">
+                    <h3>🧱 3. Abrigo e Acesso</h3>
+                    <p>Bloqueie a entrada e elimine esconderijos para escorpiões e aranhas.</p>
+                    <ul style="margin-top:10px; padding-left:20px; color:var(--text-muted); font-size:0.9rem;">
+                        <li>Vede buracos, frestas em paredes e tetos.</li>
+                        <li>Use ralos com sistema de fechar (vedação rotativa).</li>
+                        <li>Instale telas nas janelas.</li>
+                        <li>Evite acumular entulhos no quintal (são abrigos quentes e úmidos).</li>
+                    </ul>
+                  </div>
+                </div>
+                
+                <div style="margin-top: 30px; background: rgba(255,193,7,0.1); border: 1px solid var(--accent); padding: 15px; border-radius: 8px;">
+                    <p style="font-size: 0.9rem; color: #fff;">
+                        <strong>Importante:</strong> Não tente usar venenos (praguicidas) por conta própria. O controle químico deve ser feito por empresas licenciadas com Responsável Técnico da área Química.
+                    </p>
+                </div>
+              </div>
+
+              <div id="verde" class="tab-content">
+                <h3 style="color: var(--primary); margin-bottom: 20px;">Importância das Áreas Verdes</h3>
+                <div style="background: var(--bg-card); padding: 30px; border-radius: 16px; text-align: center;">
+                  <img src="assets/praca_depois.jpg" alt="Praça do V - Área Verde" style="width: 100%; max-width: 600px; height: auto; border-radius: 12px; margin-bottom: 20px; border: 2px solid var(--primary);">
+                  
+                  <div style="text-align: left; max-width: 800px; margin: 0 auto; color: #ddd;">
+                    <p>A população tem um papel fundamental na construção de uma cidade mais verde e saudável. Ao se responsabilizar pela criação e manutenção de áreas verdes, cada morador contribui diretamente para a melhoria do ambiente urbano e da qualidade de vida coletiva.</p>
+                    <br>
+                    <p>Uma forma de participar é entrando em contato com a <strong>SENSUR</strong>, por meio do programa <strong>Natal Mais Verde</strong>, buscando apoio e orientações, além de adotar canteiros e cuidar do plantio e da preservação desses espaços. Quando a comunidade se envolve, fortalece o sentimento de pertencimento e passa a se sentir parte ativa da mudança.</p>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+        </div>
+    </section>
+
+    <section id="guia" class="section">
+      <div class="container">
+        <h2>Guia de Sobrevivência</h2>
+        <div class="action-grid">
+          
+          <div class="action-box box-green">
+            <h4>🟢 ANTES (Prevenção)</h4>
+            <ul>
+              <li>Limpe calhas e ralos regularmente.</li>
+              <li>Não deixe sacos de lixo na rua fora do dia de coleta.</li>
+              <li>Conheça os pontos seguros do bairro.</li>
+            </ul>
+          </div>
+
+          <div class="action-box box-yellow">
+            <h4>🟡 DURANTE (Atenção)</h4>
+            <ul>
+              <li>Não tente atravessar ruas alagadas.</li>
+              <li>Se a água subir, desligue a chave geral de energia.</li>
+              <li>Abrigue-se em local alto e seguro.</li>
+            </ul>
+          </div>
+
+          <div class="action-box box-blue">
+            <h4>🔵 DEPOIS (Cuidado)</h4>
+            <ul>
+              <li>Descarte alimentos que tocaram na água.</li>
+              <li>Limpe a casa com água sanitária (hipoclorito).</li>
+              <li>Vistorie paredes e pisos em busca de rachaduras.</li>
+            </ul>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-alt">
+      <div class="container">
+        <div class="map-cta">
+          <h2>Monitore sua Região</h2>
+          <p style="color:#ddd; margin: 15px 0;">Veja os pontos de alagamento mapeados no Loteamento Aliança.</p>
+          <a href="mapa-risco.html" class="btn-map">📍 Acessar Mapa Interativo</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <p>© 2025 IFRN - Durmsgeo · <strong>Projeto Aliança Drenante</strong></p>
+    </div>
+  </footer>
+
+  <script src="js/script.js" defer></script>
+  <script src="js/player-musica.js" defer></script>
+  
+  <script>
+    let pageZoomLevel = 100;
+
+    function toggleZoomMenu() {
+        const menu = document.getElementById('zoomMenu');
+        menu.classList.toggle('active');
+    }
+
+    function changeZoom(amount) {
+        pageZoomLevel += amount;
+        if (pageZoomLevel < 70) pageZoomLevel = 70;
+        if (pageZoomLevel > 150) pageZoomLevel = 150;
+        document.body.style.zoom = pageZoomLevel + "%";
+    }
+
+    function resetZoom() {
+        pageZoomLevel = 100;
+        document.body.style.zoom = "100%";
+    }
+
+    const hamburgerBtn = document.getElementById('hamburgerBtn');
+    const navMenu = document.getElementById('navMenu');
+
+    function toggleMenu() {
+        hamburgerBtn.classList.toggle('active');
+        navMenu.classList.toggle('active');
+    }
+
+    hamburgerBtn.addEventListener('click', toggleMenu);
+
+    function openTab(evt, tabName) {
+      var i, tabcontent, tablinks;
+      tabcontent = document.getElementsByClassName("tab-content");
+      for (i = 0; i < tabcontent.length; i++) {
+        tabcontent[i].style.display = "none";
+        tabcontent[i].classList.remove("active");
+      }
+      tablinks = document.getElementsByClassName("tab-btn");
+      for (i = 0; i < tablinks.length; i++) {
+        tablinks[i].classList.remove("active");
+      }
+      document.getElementById(tabName).style.display = "block";
+      document.getElementById(tabName).classList.add("active");
+      evt.currentTarget.classList.add("active");
+    }
+  </script>
+</body>
+</html>

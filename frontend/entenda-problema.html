@@ -1,0 +1,471 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Entenda o Problema - Durmsgeo IFRN</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="css/style.css">
+
+  <style>
+    /* --- SYSTEM DESIGN --- */
+    :root {
+      --primary: #05df34;       
+      --primary-dark: #004d40;
+      --accent: #FFC107;        
+      --bg-body: #0e0d0d;
+      --bg-section-alt: #1a1a1a;
+      --bg-card: #151515;
+      --text-main: #f1f5f9;      
+      --text-muted: #94a3b8;     
+      --nav-bg: rgba(255, 255, 255, 0.85);
+      --nav-border: rgba(0,0,0,0.05);
+      --card-border: rgba(255, 255, 255, 0.1);
+      --shadow-card: 0 10px 15px -3px rgba(0, 0, 0, 0.5);
+      --radius: 16px;
+      --danger-color: #ff3d00; /* Cor para área crítica */
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: var(--bg-body);
+      color: var(--text-main);
+      line-height: 1.7;
+      overflow-x: hidden;
+      transition: zoom 0.3s ease;
+    }
+
+    .container { max-width: 1000px; margin: 0 auto; padding: 0 20px; }
+
+    /* --- NAV BAR --- */
+    .site-nav {
+      position: sticky; top: 20px; margin: 0 auto; width: 90%; max-width: 1000px;
+      background: var(--nav-bg); backdrop-filter: blur(12px); padding: 15px 30px;
+      border-radius: 50px; display: flex; justify-content: center; gap: 25px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1); z-index: 1000; border: 1px solid var(--nav-border);
+      transition: all 0.4s ease;
+    }
+    .site-nav a { text-decoration: none; color: #1a1a1a; font-weight: 600; font-size: 0.95rem; transition: 0.3s; position: relative; }
+    .site-nav a:hover { color: var(--primary); }
+    .site-nav a::after { content: ''; position: absolute; width: 0; height: 2px; bottom: -4px; left: 0; background-color: var(--accent); transition: width 0.3s; }
+    .site-nav a:hover::after { width: 100%; }
+
+    .hamburger {
+      display: none;
+      position: fixed; top: 20px; left: 20px; z-index: 2001;
+      background: var(--primary); border: none; border-radius: 8px;
+      width: 45px; height: 40px; cursor: pointer;
+      flex-direction: column; justify-content: center; align-items: center; gap: 5px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    }
+    .hamburger span { display: block; width: 25px; height: 3px; background-color: #000; border-radius: 2px; transition: 0.3s; }
+
+    .hero-outer {
+      background: radial-gradient(circle at top right, #00695c, #004d40);
+      color: white; padding: 40px 0 80px 0; position: relative; overflow: hidden;
+      border-bottom-left-radius: 60px; border-bottom-right-radius: 60px; border-bottom: 4px solid var(--accent);
+    }
+    .blob { position: absolute; background: rgba(255, 255, 255, 0.05); border-radius: 50%; animation: float 20s infinite ease-in-out; z-index: 0; }
+    .blob-1 { width: 400px; height: 400px; top: -100px; left: -100px; }
+    .blob-2 { width: 300px; height: 300px; bottom: -50px; right: -50px; }
+    @keyframes float { 0%, 100% { transform: translate(0, 0); } 50% { transform: translate(30px, 40px); } }
+
+    .hero { display: flex; align-items: center; justify-content: space-between; max-width: 1200px; margin: 0 auto; padding: 40px 20px; position: relative; z-index: 1; gap: 40px; flex-wrap: wrap; }
+    .hero-content { flex: 1; min-width: 300px; }
+    .brand-logos { display: flex; gap: 20px; margin-bottom: 30px; align-items: center; }
+    .brand-logos img { height: 60px; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.2)); }
+    
+    .hero-title { 
+      font-size: 3rem; font-weight: 900; line-height: 1.1; margin-bottom: 15px; 
+      background: linear-gradient(to right, #ffffff, #FFC107); 
+      background-clip: text; -webkit-background-clip: text; -webkit-text-fill-color: transparent; 
+    }
+    
+    .hero-sub { font-size: 1.2rem; color: rgba(255,255,255,0.9); margin-bottom: 40px; max-width: 500px; }
+    .hero-visual img { max-width: 100%; height: auto; animation: gentle-float 6s ease-in-out infinite; }
+    @keyframes gentle-float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
+
+    .section { padding: 80px 0; }
+    .section-alt { background: var(--bg-section-alt); }
+    h2 { font-size: 2.2rem; margin-bottom: 25px; color: var(--primary); border-left: 4px solid var(--accent); padding-left: 15px; }
+    h3 { color: var(--text-main); font-size: 1.5rem; margin-top: 30px; margin-bottom: 15px; }
+    
+    .text-block p { margin-bottom: 20px; color: #d1d5db; font-size: 1.05rem; text-align: justify; }
+    .text-block strong { color: var(--accent); }
+
+    .edu-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px; margin-top: 30px; }
+    .edu-card {
+      background: var(--bg-card); padding: 30px; border-radius: var(--radius);
+      box-shadow: var(--shadow-card); border: 1px solid var(--card-border);
+      transition: all 0.3s ease; position: relative; overflow: hidden;
+    }
+    .edu-card:hover { transform: translateY(-5px); border-color: var(--primary); }
+    .edu-card h4 { color: var(--primary); margin-bottom: 15px; font-size: 1.3rem; display: flex; align-items: center; gap: 10px; }
+    .edu-card p { color: var(--text-muted); font-size: 0.95rem; }
+
+    .tech-box {
+        background: linear-gradient(180deg, rgba(255, 255, 255, 0.03) 0%, rgba(255, 255, 255, 0.01) 100%);
+        border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; padding: 40px; margin: 40px 0; position: relative;
+    }
+    .tech-box::before {
+        content: 'CONCEITOS TÉCNICOS'; position: absolute; top: -12px; left: 30px;
+        background: var(--primary-dark); color: var(--primary); padding: 4px 12px; font-size: 0.75rem; font-weight: bold;
+        border-radius: 4px; border: 1px solid var(--primary);
+    }
+
+    .critical-area {
+        margin-top: 60px;
+        padding: 2px;
+        border-radius: 20px;
+        background: linear-gradient(135deg, rgba(255, 61, 0, 0.6), transparent 60%);
+        box-shadow: 0 10px 30px -10px rgba(255, 61, 0, 0.3);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .critical-inner {
+        background: #121010;
+        border-radius: 18px;
+        padding: 40px;
+        height: 100%;
+        position: relative;
+        z-index: 2;
+    }
+
+    .critical-area::before {
+        content: ''; position: absolute; top: 0; right: 0;
+        width: 300px; height: 300px;
+        background: radial-gradient(circle, rgba(255, 61, 0, 0.15) 0%, transparent 70%);
+        z-index: 1; pointer-events: none;
+    }
+
+    .critical-header {
+        display: flex; align-items: center; gap: 15px; margin-bottom: 25px;
+        border-bottom: 1px solid rgba(255, 61, 0, 0.2);
+        padding-bottom: 15px;
+    }
+
+    .alert-icon {
+        background: rgba(255, 61, 0, 0.1); color: var(--danger-color);
+        width: 50px; height: 50px; border-radius: 50%;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 1.5rem; border: 1px solid var(--danger-color);
+        animation: pulse-red 2s infinite;
+    }
+
+    .critical-area h3 {
+        margin: 0; color: #fff; font-size: 1.6rem; letter-spacing: 0.5px;
+    }
+    .critical-area h3 span { color: var(--danger-color); display: block; font-size: 0.8rem; text-transform: uppercase; margin-bottom: 5px; }
+
+    .critical-area p { color: #d1d5db; font-size: 1rem; margin-bottom: 15px; position: relative; z-index: 2; }
+    .critical-area strong { color: var(--danger-color); }
+
+    @keyframes pulse-red {
+        0% { box-shadow: 0 0 0 0 rgba(255, 61, 0, 0.4); }
+        70% { box-shadow: 0 0 0 10px rgba(255, 61, 0, 0); }
+        100% { box-shadow: 0 0 0 0 rgba(255, 61, 0, 0); }
+    }
+
+    .action-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin-top: 40px; }
+    .action-box {
+      background: var(--bg-card); padding: 25px; border-radius: 12px;
+      border: 1px solid var(--card-border); position: relative; height: 100%;
+    }
+    .action-box h4 { margin-top: 0; font-size: 1.1rem; text-transform: uppercase; margin-bottom: 15px; display: inline-block; padding: 5px 10px; border-radius: 4px; color: #000; font-weight: 800; }
+    
+    .box-green { border-left: 5px solid #00c853; } .box-green h4 { background: #00c853; }
+    .box-yellow { border-left: 5px solid #ffd600; } .box-yellow h4 { background: #ffd600; }
+    .box-red { border-left: 5px solid #ff3d00; } .box-red h4 { background: #ff3d00; color: white; }
+    
+    .action-box ul { list-style: none; padding: 0; }
+    .action-box li { margin-bottom: 12px; color: var(--text-muted); padding-left: 20px; position: relative; font-size: 0.95rem; line-height: 1.5; }
+    .action-box li::before { content: '•'; position: absolute; left: 0; color: white; font-weight: bold; }
+
+    .map-cta {
+      background: linear-gradient(135deg, rgba(5, 223, 52, 0.1), rgba(0, 77, 64, 0.2));
+      border: 1px solid rgba(5, 223, 52, 0.3); border-radius: 20px;
+      padding: 50px; text-align: center; margin-top: 40px;
+    }
+    .btn-map {
+      background: var(--primary); color: #000; padding: 12px 30px; border-radius: 50px;
+      text-decoration: none; font-weight: 800; display: inline-block; margin-top: 20px; transition: 0.3s;
+    }
+    .btn-map:hover { transform: scale(1.05); background: #00e676; box-shadow: 0 0 15px rgba(0, 230, 118, 0.4); }
+
+    .footer { background: #050b14; color: #64748b; text-align: center; padding: 40px 20px; border-top: 1px solid rgba(255,255,255,0.05); }
+
+    .controls-wrapper { position: fixed; bottom: 30px; right: 20px; z-index: 2000; display: flex; flex-direction: column; gap: 15px; align-items: center; }
+    .btn-float { width: 50px; height: 50px; border-radius: 50%; background: var(--primary); border: none; color: white; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 10px rgba(0,0,0,0.3); transition: 0.2s; }
+    .btn-float:hover { transform: scale(1.1); background: var(--primary-dark); }
+    .btn-float svg { width: 24px; height: 24px; fill: currentColor; }
+    .zoom-menu { display: none; flex-direction: column; gap: 8px; margin-bottom: 5px; background: rgba(0,0,0,0.8); padding: 8px; border-radius: 25px; border: 1px solid var(--primary); animation: fadeIn 0.3s ease; }
+    .zoom-menu.active { display: flex; }
+    .zoom-btn { width: 35px; height: 35px; border-radius: 50%; background: #333; color: var(--primary); border: 1px solid var(--primary); font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; }
+    .zoom-btn:hover { background: var(--primary); color: #000; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+    @media (max-width: 768px) { 
+      .hero-title { font-size: 2.2rem; } 
+      .hero { flex-direction: column-reverse; text-align: center; } 
+      
+      .hamburger { display: flex; }
+
+      .site-nav {
+        display: flex; 
+        flex-direction: column;
+        justify-content: flex-start;
+        position: fixed;
+        top: 0; right: -100%;
+        width: 70%; max-width: 300px; height: 100vh;
+        margin: 0; padding-top: 80px;
+        border-radius: 0;
+        background: rgba(14, 13, 13, 0.98);
+        border-left: 2px solid var(--primary);
+      }
+      .site-nav.active { right: 0; }
+      
+      .site-nav a {
+        color: #fff; font-size: 1.2rem; padding: 15px;
+        border-bottom: 1px solid rgba(255,255,255,0.05);
+        width: 100%; text-align: center;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <button class="hamburger" onclick="toggleMenu()" aria-label="Abrir Menu">
+    <span></span>
+    <span></span>
+    <span></span>
+  </button>
+
+  <div class="controls-wrapper">
+    <div id="zoomMenu" class="zoom-menu">
+        <button class="zoom-btn" onclick="changeZoom(10)" title="Aumentar">+</button>
+        <button class="zoom-btn" onclick="resetZoom()" title="Resetar">↺</button>
+        <button class="zoom-btn" onclick="changeZoom(-10)" title="Diminuir">-</button>
+    </div>
+
+    <button class="btn-float" onclick="toggleZoomMenu()" title="Ajustar Zoom">
+       <svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 11.99 14 9.5 11.99 14 9.5 14z"/></svg>
+    </button>
+
+    <button class="btn-float" id="btn-mic-speak" title="Ouvir Texto">
+      <svg viewBox="0 0 24 24"><path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z"/><path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z"/></svg>
+    </button>
+  </div>
+
+  <header class="hero-outer">
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+
+    <nav class="site-nav" id="site-nav" role="navigation">
+      <a href="index.html">Início</a>
+      <a href="quem-somos.html">Quem Somos</a>
+      <a href="entenda-problema.html" style="color:var(--primary); font-weight:700;">Problemas</a>
+      <a href="educacao.html">Educação</a> 
+      <a href="solucao.html">Soluções</a>
+      <a href="mapa-risco.html">Mapa</a>
+      <a href="quiz.html">Quiz</a>
+    </nav>
+
+    <div class="hero">
+      <div class="hero-content">
+        <div class="brand-logos">
+        <img src="assets/logo2.png" alt="Logo Lateral">
+        <img src="assets/image.png" alt="Logo Principal">
+        <img src="assets/aliança.jpg" alt="Logo Lateral">
+        <img src="assets/if.png" alt="Logo Lateral">
+        </div>
+        <h1 class="hero-title">Entenda o Problema</h1>
+        <p class="hero-sub">Uma análise profunda dos fatores sociais, históricos e geológicos que causam os alagamentos no Bairro Nossa Senhora da Apresentação.</p>
+        <div class="hero-ctas">
+          <a class="btn" href="#historico" style="background:var(--accent); color:#004d40; padding:14px 32px; border-radius:50px; text-decoration:none; font-weight:700; display:inline-block;">Ler Contexto</a>
+        </div>
+      </div>
+      <div class="hero-visual">
+        <img src="assets/logo.png" alt="Ilustração Problemas">
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+    <section class="section" id="historico">
+      <div class="container text-block">
+        <h2>Formação e Contexto Histórico</h2>
+        <p>
+          O bairro <strong>Nossa Senhora da Apresentação</strong>, localizado na Zona Norte de Natal, carrega desde sua formação um histórico de esquecimento pelo poder público e marginalização social. Sua ocupação ocorreu, em grande parte, por meio de invasões de terra realizadas por populações menos privilegiadas, que buscavam o direito básico à moradia diante da falta de políticas habitacionais eficazes no período da <strong>Ditadura Militar (1964-1985)</strong>.
+        </p>
+        <p>
+          Esse processo fez com que o bairro crescesse de forma desordenada, sem planejamento urbano adequado. Desde sua origem, o bairro sofreu com a ausência de políticas públicas eficazes, especialmente nas áreas de saneamento, drenagem e urbanização. Essa negligência resultou em desigualdades socioespaciais, tornando a população mais vulnerável aos impactos ambientais e aos eventos climáticos intensos.
+        </p>
+      </div>
+    </section>
+
+    <section class="section section-alt">
+      <div class="container text-block">
+        <h2>Características Físicas e Ambientais</h2>
+        <p>
+          O bairro está localizado em uma área predominantemente plana, com altitudes entre 40 e 50 metros acima do nível do mar, típica das planícies costeiras. Os solos são majoritariamente arenosos ou argilosos, classificados como <strong>latossolos e neossolos</strong>, que apresentam baixa resistência estrutural e elevada sensibilidade à ação da água.
+        </p>
+        <p>
+          Além disso, o bairro é fortemente impactado pelo regime de chuvas, que se concentra principalmente entre os meses de <strong>maio e julho</strong>, período de maior pluviosidade em Natal. Nessas épocas, o volume intenso e contínuo de chuvas potencializa os processos de alagamento, lixiviação, erosão e intemperismo, agravando os problemas já existentes na infraestrutura urbana.
+        </p>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container text-block">
+        <h2>A Problemática</h2>
+        <p>
+          O crescimento urbano sem planejamento intensificou a <strong>impermeabilização do solo</strong>, causada pelo asfaltamento, construções irregulares e redução de áreas verdes. Isso diminui a infiltração da água da chuva e aumenta o escoamento superficial, sobrecarregando os sistemas de drenagem.
+        </p>
+        
+        <div class="edu-grid">
+          <div class="edu-card">
+            <h4>🚧 Infraestrutura Falha</h4>
+            <p>As redes de drenagem e esgotamento, antigas ou mal dimensionadas, não suportam o volume de água. Ocorrem rompimentos de tubulações e retorno da água para residências.</p>
+          </div>
+          <div class="edu-card">
+            <h4>🗑️ Resíduos Sólidos</h4>
+            <p>O descarte inadequado de lixo doméstico e entulhos entope bueiros e bocas de lobo. Com o sistema obstruído, o escoamento é prejudicado, aumentando os alagamentos.</p>
+          </div>
+          <div class="edu-card">
+            <h4>🌧️ Impermeabilização</h4>
+            <p>O solo coberto por cimento e asfalto perde a capacidade de absorver a água, criando enxurradas violentas nas partes mais baixas.</p>
+          </div>
+        </div>
+
+        <div class="tech-box">
+            <h3 style="margin-top:0; color: var(--primary);">O Processo de Intemperismo</h3>
+            <p style="margin-bottom:0;">
+                O intemperismo é um processo natural, que ocorre independentemente da ação humana. No entanto, no bairro, fatores como alagamentos frequentes e vazamentos aceleram esse processo. 
+                A água acumulada infiltra-se no solo, intensificando o <strong>intemperismo físico e químico</strong>. Isso enfraquece a estrutura do solo, contribuindo para erosões, afundamentos e a frequente abertura de grandes crateras e buracos nas ruas.
+            </p>
+        </div>
+
+        <div class="critical-area">
+            <div class="critical-inner">
+                <div class="critical-header">
+                    <div class="alert-icon">!</div>
+                    <h3>
+                        <span>Área Crítica</span>
+                        Loteamento Aliança
+                    </h3>
+                </div>
+                
+                <p>
+                    Dentro do bairro, o loteamento Aliança destaca-se como uma das áreas mais prejudicadas. A região apresenta crateras e afundamentos no solo, resultado da ação contínua da água associada à fragilidade do terreno.
+                </p>
+                <p>
+                    Durante o período chuvoso (maio a julho), as tubulações ligadas a uma lagoa de captação não conseguem suportar o volume das águas pluviais, provocando o transbordamento. Isso resulta em <strong>fortes alagamentos e invasão de residências</strong>.
+                </p>
+            </div>
+        </div>
+
+      </div>
+    </section>
+
+    <section class="section section-alt">
+        <div class="container">
+            <h2>Problemas Socioambientais</h2>
+            <p style="color: #ccc; margin-bottom: 40px;">Esses fenômenos desencadeiam uma série de problemas que vão além dos limites do bairro:</p>
+            
+            <div class="action-grid">
+                
+                <div class="action-box box-red">
+                    <h4>Riscos & Danos Físicos</h4>
+                    <ul>
+                        <li><strong>Instabilidade do solo:</strong> Formação de crateras, buracos, afundamentos e rachaduras em vias e imóveis.</li>
+                        <li><strong>Degradação ambiental:</strong> Lixiviação de nutrientes do solo, carreamento de resíduos sólidos e contaminação de corpos d’água.</li>
+                        <li><strong>Novos danos:</strong> Aceleração da deterioração da infraestrutura urbana existente.</li>
+                    </ul>
+                </div>
+
+                <div class="action-box box-yellow">
+                    <h4>Saúde Pública</h4>
+                    <ul>
+                        <li>Proliferação de doenças de veiculação hídrica (Leptospirose, diarreias, infecções de pele).</li>
+                        <li>Contato direto da população com água contaminada misturada com esgoto.</li>
+                        <li>Riscos sanitários elevados devido ao acúmulo de lixo trazido pela água.</li>
+                    </ul>
+                </div>
+
+                <div class="action-box box-green">
+                    <h4>Impacto Social e Econômico</h4>
+                    <ul>
+                        <li><strong>Danos materiais:</strong> Invasão de água nas casas, perda de móveis e eletrodomésticos.</li>
+                        <li><strong>Mobilidade:</strong> Interrupção do acesso ao trabalho, escolas e serviços essenciais.</li>
+                        <li><strong>Psicológico:</strong> Insegurança, estresse e sensação de abandono.</li>
+                        <li><strong>Desigualdade:</strong> Agravamento das desigualdades socioespaciais.</li>
+                    </ul>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <section class="section">
+      <div class="container text-block">
+        <h2 style="border-left-color: #fff; color: #fff;">Síntese do Problema</h2>
+        <p>
+          Dessa forma, os alagamentos e o intemperismo no bairro Nossa Senhora da Apresentação, com destaque para o loteamento Aliança, não são apenas fenômenos naturais, mas o resultado da interação entre fatores históricos, sociais, ambientais e estruturais. Essa realidade evidencia a necessidade urgente de planejamento urbano, investimentos em infraestrutura e políticas públicas voltadas à redução das desigualdades e à promoção da justiça socioambiental.
+        </p>
+
+        <div class="map-cta">
+          <h2>Visualize o Impacto</h2>
+          <p style="color:#ddd; margin: 15px 0;">Entender a teoria é o primeiro passo. Veja no mapa onde esses riscos são reais e iminentes.</p>
+          <a href="mapa-risco.html" class="btn-map">📍 Ver Mapa de Risco</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <p>© 2025 IFRN - Durmsgeo · <strong>Projeto Aliança Drenante</strong></p>
+    </div>
+  </footer>
+
+  <script src="js/script.js" defer></script>
+  <script src="js/player-musica.js" defer></script>
+
+  <script>
+    /* --- FUNÇÕES DE ZOOM --- */
+    let pageZoomLevel = 100;
+
+    function toggleZoomMenu() {
+        const menu = document.getElementById('zoomMenu');
+        menu.classList.toggle('active');
+    }
+
+    function changeZoom(amount) {
+        pageZoomLevel += amount;
+        if (pageZoomLevel < 70) pageZoomLevel = 70;
+        if (pageZoomLevel > 150) pageZoomLevel = 150;
+        document.body.style.zoom = pageZoomLevel + "%";
+    }
+
+    function resetZoom() {
+        pageZoomLevel = 100;
+        document.body.style.zoom = "100%";
+    }
+
+    /* --- FUNÇÃO DO MENU HAMBURGUER (Adicionado) --- */
+    function toggleMenu() {
+      const nav = document.getElementById('site-nav');
+      nav.classList.toggle('active');
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Acesso - Durmsgeo IFRN</title>
+  
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+  
+  <style>
+    :root {
+      --primary: #05df34;       
+      --primary-hover: #04b32a;
+      --bg-body: #0f172a;       
+      --text-main: #f1f5f9;     
+      --text-muted: #94a3b8;    
+      --border: rgba(255,255,255,0.08);
+      --input-bg: rgba(15, 23, 42, 0.6);
+      --radius: 24px;
+      --card-bg: rgba(30, 41, 59, 0.4);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; outline: none; }
+    
+    body {
+      background-color: var(--bg-body);
+      color: var(--text-main);
+      font-family: 'Inter', sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      overflow: hidden;
+      position: relative;
+    }
+
+    /* Animação de Fundo */
+    .blob {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(80px);
+      opacity: 0.4;
+      z-index: -1;
+      animation: float 10s infinite ease-in-out alternate;
+    }
+    .blob-1 { width: 500px; height: 500px; background: var(--primary); top: -100px; left: -100px; }
+    .blob-2 { width: 400px; height: 400px; background: #3b82f6; bottom: -100px; right: -50px; animation-delay: -5s; }
+
+    @keyframes float {
+      0% { transform: translate(0, 0) scale(1); }
+      100% { transform: translate(30px, 50px) scale(1.1); }
+    }
+
+    .login-card {
+      background: var(--card-bg);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      padding: 48px 40px;
+      border-radius: var(--radius);
+      border: 1px solid rgba(255,255,255,0.1);
+      width: 100%;
+      max-width: 440px;
+      text-align: center;
+      box-shadow: 0 40px 80px -20px rgba(0, 0, 0, 0.5);
+      animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(30px) scale(0.95); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    .logo-area {
+      display: flex; justify-content: center; align-items: center;
+      width: 60px; height: 60px;
+      background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.02));
+      border-radius: 16px;
+      margin: 0 auto 20px auto;
+      color: var(--primary);
+      font-size: 32px;
+    }
+
+    h1 { font-size: 1.75rem; margin-bottom: 8px; color: #fff; }
+    .subtitle { color: var(--text-muted); font-size: 0.9rem; margin-bottom: 32px; }
+
+    .input-wrapper { position: relative; margin-bottom: 16px; text-align: left; }
+    .input-icon { position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: var(--text-muted); }
+
+    .field {
+      width: 100%; padding: 14px 16px 14px 48px;
+      background: var(--input-bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      color: white;
+      transition: 0.3s;
+    }
+    
+    .field:focus { border-color: var(--primary); box-shadow: 0 0 0 4px rgba(5, 223, 52, 0.1); }
+
+    .forgot-link { display: block; text-align: right; font-size: 0.85rem; color: var(--text-muted); text-decoration: none; margin-bottom: 24px; cursor: pointer; }
+    .forgot-link:hover { color: var(--primary); }
+
+    .btn-login {
+      width: 100%; padding: 14px;
+      background: var(--primary); color: #001a05;
+      border: none; border-radius: 12px;
+      font-weight: 700; cursor: pointer;
+      display: flex; justify-content: center; align-items: center; gap: 8px;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .btn-login:hover { transform: translateY(-2px); box-shadow: 0 10px 20px rgba(5, 223, 52, 0.2); }
+    .btn-login:disabled { opacity: 0.7; cursor: not-allowed; }
+
+    .btn-google {
+        width: 100%; padding: 12px;
+        background: white; color: #1e293b;
+        border: none; border-radius: 24px;
+        font-weight: 600; cursor: pointer;
+        display: flex; justify-content: center; align-items: center; gap: 10px;
+        transition: 0.2s;
+    }
+    .btn-google:hover { background: #f1f5f9; }
+    .btn-google:disabled { opacity: 0.6; cursor: wait; }
+
+    .divider { margin: 30px 0; display: flex; align-items: center; color: var(--text-muted); font-size: 0.75rem; }
+    .divider::before, .divider::after { content: ""; flex: 1; height: 1px; background: rgba(255,255,255,0.1); }
+    .divider span { padding: 0 10px; }
+
+    .footer-text { margin-top: 30px; font-size: 0.9rem; color: var(--text-muted); }
+    .footer-text a { color: var(--primary); cursor: pointer; font-weight: 600; }
+
+    .hidden { display: none !important; }
+    
+    /* Loading Spinner */
+    .spinner { animation: spin 1s linear infinite; }
+    @keyframes spin { 100% { transform: rotate(360deg); } }
+  </style>
+</head>
+<body>
+
+  <div class="blob blob-1"></div>
+  <div class="blob blob-2"></div>
+
+  <div class="login-card">
+    <div class="logo-area"><i class="ph-fill ph-student"></i></div>
+
+    <h1 id="form-title">Bem-vindo de volta</h1>
+    <p class="subtitle" id="form-subtitle">Insira suas credenciais para acessar o painel.</p>
+
+    <div id="login-form">
+      <div class="input-wrapper">
+        <input type="email" id="login-email" class="field" placeholder="seu@email.com">
+        <i class="ph ph-envelope-simple input-icon"></i>
+      </div>
+      <div class="input-wrapper">
+        <input type="password" id="login-pass" class="field" placeholder="Sua senha">
+        <i class="ph ph-lock-key input-icon"></i>
+      </div>
+      <a class="forgot-link" id="btn-forgot">Esqueceu a senha?</a>
+      <button class="btn-login" id="btn-entrar">
+        <span>Entrar</span> <i class="ph-bold ph-arrow-right"></i>
+      </button>
+    </div>
+
+    <div id="register-form" class="hidden">
+      <div class="input-wrapper">
+        <input type="text" id="reg-name" class="field" placeholder="Nome Completo">
+        <i class="ph ph-user input-icon"></i>
+      </div>
+      <div class="input-wrapper">
+        <input type="email" id="reg-email" class="field" placeholder="E-mail">
+        <i class="ph ph-envelope-simple input-icon"></i>
+      </div>
+      <div class="input-wrapper">
+        <input type="password" id="reg-pass" class="field" placeholder="Crie uma senha forte">
+        <i class="ph ph-lock-key input-icon"></i>
+      </div>
+      <div class="input-wrapper">
+        <input type="date" id="reg-birth" class="field">
+        <i class="ph ph-calendar-blank input-icon"></i>
+      </div>
+      <button class="btn-login" id="btn-registrar">
+        <span>Criar Conta</span> <i class="ph-bold ph-user-plus"></i>
+      </button>
+    </div>
+
+    <div class="divider"><span>ou continue com</span></div>
+    
+    <button type="button" class="btn-google" id="btn-google">
+        <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" width="20">
+        Google
+    </button>
+    
+    <p class="footer-text" id="toggle-text">
+      Não tem uma conta? <a id="link-criar">Crie agora</a>
+    </p>
+  </div>
+
+  <script type="module">
+    // IMPORTANDO FIREBASE (Versão Web Modular)
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { 
+      getAuth, 
+      createUserWithEmailAndPassword, 
+      signInWithEmailAndPassword, 
+      GoogleAuthProvider, 
+      signInWithPopup,
+      onAuthStateChanged,
+      sendPasswordResetEmail,
+      updateProfile
+    } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+    import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+    // --- CONFIGURAÇÃO ---
+    const firebaseConfig = {
+        apiKey: "AIzaSyBEOpVc1EskZVgGkaegdKzA_WOk5C2qfO8",
+        authDomain: "dursmsge0.firebaseapp.com",
+        projectId: "dursmsge0",
+        storageBucket: "dursmsge0.firebasestorage.app",
+        messagingSenderId: "874076135664",
+        appId: "1:874076135664:web:b04b0fa32c0a09948f2235"
+    };
+
+    // Inicializar Firebase
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+    const provider = new GoogleAuthProvider();
+
+    // --- ELEMENTOS DO DOM ---
+    const loginForm = document.getElementById('login-form');
+    const registerForm = document.getElementById('register-form');
+    const formTitle = document.getElementById('form-title');
+    const toggleText = document.getElementById('toggle-text');
+    const linkCriar = document.getElementById('link-criar');
+    
+    // --- LÓGICA DE ALTERNAR TELAS ---
+    window.toggleMode = (mode) => {
+        const isReg = mode === 'register';
+        loginForm.classList.toggle('hidden', isReg);
+        registerForm.classList.toggle('hidden', !isReg);
+        formTitle.innerText = isReg ? "Criar nova conta" : "Bem-vindo de volta";
+        
+        if (isReg) {
+            toggleText.innerHTML = 'Já possui conta? <a id="link-login">Fazer Login</a>';
+            document.getElementById('link-login').onclick = () => window.toggleMode('login');
+        } else {
+            toggleText.innerHTML = 'Não tem uma conta? <a id="link-criar">Crie agora</a>';
+            document.getElementById('link-criar').onclick = () => window.toggleMode('register');
+        }
+    }
+    
+    // Inicializa os listeners de clique para alternar
+    linkCriar.onclick = () => window.toggleMode('register');
+
+    // --- 1. LOGIN COM EMAIL E SENHA ---
+    document.getElementById('btn-entrar').addEventListener('click', async () => {
+        const email = document.getElementById('login-email').value;
+        const senha = document.getElementById('login-pass').value;
+        const btn = document.getElementById('btn-entrar');
+
+        if(!email || !senha) return alert("Preencha todos os campos.");
+
+        btn.innerHTML = `<i class="ph ph-spinner spinner"></i> Entrando...`;
+        btn.disabled = true;
+
+        try {
+            const userCredential = await signInWithEmailAndPassword(auth, email, senha);
+            console.log("Login OK:", userCredential.user.email);
+            // O onAuthStateChanged vai lidar com o redirecionamento
+        } catch (error) {
+            console.error(error);
+            alert(tratarErroFirebase(error.code));
+            btn.innerHTML = `<span>Entrar</span> <i class="ph-bold ph-arrow-right"></i>`;
+            btn.disabled = false;
+        }
+    });
+
+    // --- 2. REGISTRO (CRIA CONTA + BANCO DE DADOS) ---
+    document.getElementById('btn-registrar').addEventListener('click', async () => {
+        const nome = document.getElementById('reg-name').value;
+        const email = document.getElementById('reg-email').value;
+        const senha = document.getElementById('reg-pass').value;
+        const nascimento = document.getElementById('reg-birth').value;
+        const btn = document.getElementById('btn-registrar');
+
+        if(!nome || !email || !senha) return alert("Preencha todos os campos.");
+
+        btn.innerHTML = `<i class="ph ph-spinner spinner"></i> Criando...`;
+        btn.disabled = true;
+
+        try {
+            // 1. Criar usuário na autenticação
+            const res = await createUserWithEmailAndPassword(auth, email, senha);
+            const user = res.user;
+
+            // 2. Atualizar Nome no Auth
+            await updateProfile(user, { displayName: nome });
+
+            // 3. CRIAR DOCUMENTO NO FIRESTORE
+            await setDoc(doc(db, "users", user.uid), {
+                nome: nome,
+                email: email,
+                nascimento: nascimento,
+                xp: 0,        
+                nivel: 1,      
+                bio: "Estudante dedicado.",
+                instagram: "",
+                foto: ""       
+            });
+
+            alert("Conta criada com sucesso!");
+            // Redirecionamento automático pelo onAuthStateChanged
+
+        } catch (error) {
+            console.error(error);
+            alert(tratarErroFirebase(error.code));
+            btn.innerHTML = `<span>Criar Conta</span> <i class="ph-bold ph-user-plus"></i>`;
+            btn.disabled = false;
+        }
+    });
+
+    // --- 3. LOGIN COM GOOGLE (CORRIGIDO) ---
+    document.getElementById('btn-google').addEventListener('click', async () => {
+        const googleBtn = document.getElementById('btn-google');
+        
+        // Bloqueia botão para evitar clique duplo
+        googleBtn.disabled = true; 
+        googleBtn.style.opacity = "0.5";
+
+        try {
+            const result = await signInWithPopup(auth, provider);
+            const user = result.user;
+            
+            const docRef = doc(db, "users", user.uid);
+            const docSnap = await getDoc(docRef);
+
+            if (!docSnap.exists()) {
+                await setDoc(docRef, {
+                    nome: user.displayName,
+                    email: user.email,
+                    xp: 0,
+                    nivel: 1,
+                    foto: user.photoURL,
+                    bio: "Olá! Uso Durmsgeo.",
+                    instagram: ""
+                });
+            }
+            // Sucesso -> Redireciona via onAuthStateChanged
+        } catch (error) {
+            // Reabilita o botão em caso de erro
+            googleBtn.disabled = false;
+            googleBtn.style.opacity = "1";
+
+            // Se o erro for cancelamento pelo usuário, apenas ignora
+            if (error.code === 'auth/cancelled-popup-request' || error.code === 'auth/popup-closed-by-user') {
+                console.log("Login cancelado pelo usuário.");
+                return;
+            }
+
+            console.error(error);
+            alert("Erro no login Google: " + error.message);
+        }
+    });
+
+    // --- 4. RECUPERAR SENHA ---
+    document.getElementById('btn-forgot').addEventListener('click', async () => {
+        const email = document.getElementById('login-email').value;
+        if(!email) return alert("Digite seu e-mail no campo para recuperar a senha.");
+        
+        try {
+            await sendPasswordResetEmail(auth, email);
+            alert("Enviamos um link de redefinição para: " + email);
+        } catch (error) {
+            alert(tratarErroFirebase(error.code));
+        }
+    });
+
+    // --- 5. OBSERVADOR DE ESTADO (Global) ---
+    onAuthStateChanged(auth, (user) => {
+        if (user) {
+            const sessionData = {
+                uid: user.uid,
+                id: user.uid, 
+                email: user.email,
+                nome: user.displayName
+            };
+            localStorage.setItem('user_data', JSON.stringify(sessionData));
+            
+            window.location.href = "perfil.html";
+        }
+    });
+
+    // --- UTILITÁRIOS ---
+    function tratarErroFirebase(code) {
+        switch(code) {
+            case 'auth/invalid-credential': return 'Email ou senha incorretos.';
+            case 'auth/user-not-found': return 'Usuário não encontrado.';
+            case 'auth/wrong-password': return 'Senha incorreta.';
+            case 'auth/email-already-in-use': return 'Este email já está em uso.';
+            case 'auth/weak-password': return 'A senha é muito fraca (min 6 caracteres).';
+            case 'auth/invalid-email': return 'Formato de e-mail inválido.';
+            default: return 'Ocorreu um erro: ' + code;
+        }
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Meu Perfil - Durmsgeo</title>
+  
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+  
+  <style>
+    :root {
+      --primary: #05df34;       
+      --primary-hover: #04b32a;
+      --bg-body: #0f172a;       
+      --text-main: #f1f5f9;     
+      --text-muted: #94a3b8;    
+      --border: rgba(255,255,255,0.08);
+      --card-bg: #1e293b;
+      --input-bg: #0f172a;
+      --instagram-gradient: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; outline: none; }
+    
+    body {
+      background-color: var(--bg-body);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding-bottom: 40px;
+    }
+
+    /* --- Header / Navbar --- */
+    nav {
+      width: 100%;
+      max-width: 800px;
+      padding: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .nav-left { display: flex; align-items: center; gap: 15px; }
+
+    .btn-back {
+      background: transparent;
+      color: var(--text-muted);
+      border: 1px solid var(--border);
+      padding: 8px 14px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 500;
+      transition: 0.2s;
+      display: flex; align-items: center; gap: 6px;
+      text-decoration: none;
+      font-size: 0.9rem;
+    }
+    .btn-back:hover { background: rgba(255,255,255,0.05); color: var(--text-main); }
+    
+    /* Botão Admin */
+    .btn-admin {
+      background: rgba(255, 215, 0, 0.1);
+      color: #ffd700;
+      border: 1px solid rgba(255, 215, 0, 0.3);
+      padding: 8px 14px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: 0.2s;
+      display: none; /* Começa invisível */
+      align-items: center; gap: 6px;
+      text-decoration: none;
+      font-size: 0.9rem;
+    }
+    .btn-admin:hover { background: rgba(255, 215, 0, 0.2); transform: translateY(-2px); }
+
+    .btn-logout {
+      background: rgba(255, 50, 50, 0.1);
+      color: #ff6b6b;
+      border: 1px solid rgba(255, 50, 50, 0.2);
+      padding: 8px 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: 0.2s;
+      display: flex; align-items: center; gap: 6px;
+      font-size: 0.9rem;
+    }
+    .btn-logout:hover { background: rgba(255, 50, 50, 0.2); }
+
+    /* --- Card Principal --- */
+    .profile-card {
+      background: var(--card-bg);
+      width: 90%;
+      max-width: 500px;
+      border-radius: 24px;
+      padding: 30px;
+      border: 1px solid var(--border);
+      box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .bg-gradient {
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 100px;
+      background: linear-gradient(180deg, rgba(5, 223, 52, 0.15) 0%, rgba(30, 41, 59, 0) 100%);
+      z-index: 0;
+    }
+
+    .profile-header {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+
+    /* Avatar */
+    .avatar-container {
+      width: 110px; height: 110px;
+      border-radius: 50%;
+      padding: 4px;
+      background: linear-gradient(135deg, var(--primary), #00600f);
+      margin-bottom: 16px;
+      position: relative;
+    }
+    .avatar {
+      width: 100%; height: 100%;
+      border-radius: 50%;
+      object-fit: cover;
+      background: #0f172a;
+      border: 4px solid var(--card-bg);
+    }
+    .edit-btn {
+      position: absolute;
+      bottom: 0; right: 0;
+      background: var(--text-main);
+      color: var(--bg-body);
+      border-radius: 50%;
+      width: 32px; height: 32px;
+      display: flex; justify-content: center; align-items: center;
+      cursor: pointer;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+      border: none;
+      transition: transform 0.2s;
+    }
+    .edit-btn:hover { transform: scale(1.1); }
+
+    /* Textos e Badges */
+    .user-name { font-size: 1.5rem; font-weight: 700; margin-bottom: 4px; display: flex; align-items: center; gap: 8px; }
+    
+    .badge-title {
+        font-size: 0.7rem;
+        background: rgba(5, 223, 52, 0.1);
+        color: var(--primary);
+        padding: 4px 8px;
+        border-radius: 20px;
+        border: 1px solid rgba(5, 223, 52, 0.3);
+        vertical-align: middle;
+        font-weight: 600;
+        text-transform: uppercase;
+    }
+
+    .instagram-link {
+        font-size: 0.9rem;
+        text-decoration: none;
+        margin-bottom: 10px;
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        background: var(--instagram-gradient);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        font-weight: 600;
+        transition: opacity 0.2s;
+    }
+    .instagram-link i { font-size: 1.1rem; color: #dc2743; } 
+    .instagram-link:hover { opacity: 0.8; }
+
+    .user-bio { color: var(--text-muted); font-size: 0.9rem; margin-bottom: 10px; line-height: 1.4; max-width: 80%; }
+    
+    .member-since { font-size: 0.75rem; color: var(--text-muted); opacity: 0.6; margin-bottom: 24px; display: flex; align-items: center; gap: 5px;}
+
+    /* Stats Grid */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      width: 100%;
+      margin-bottom: 24px;
+    }
+    .stat-box {
+      background: rgba(15, 23, 42, 0.5);
+      padding: 16px;
+      border-radius: 16px;
+      text-align: center;
+      border: 1px solid var(--border);
+      transition: transform 0.2s;
+    }
+    .stat-box:hover { transform: translateY(-2px); border-color: rgba(255,255,255,0.2); }
+    .stat-value { font-size: 1.25rem; font-weight: 700; color: var(--primary); }
+    .stat-label { font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; }
+
+    /* Barra de Progresso */
+    .xp-container {
+      width: 100%;
+      margin-top: 10px;
+    }
+    .xp-info {
+      display: flex; justify-content: space-between;
+      font-size: 0.8rem; color: var(--text-muted); margin-bottom: 6px;
+    }
+    .progress-bg {
+      width: 100%;
+      height: 12px;
+      background: #0f172a;
+      border-radius: 20px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+    }
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--primary), #6aff8d);
+      width: 0%;
+      border-radius: 20px;
+      transition: width 1s ease-in-out;
+      box-shadow: 0 0 10px rgba(5, 223, 52, 0.4);
+    }
+
+    /* Modal de Edição */
+    .modal-overlay {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0,0,0,0.7); backdrop-filter: blur(5px);
+      z-index: 100;
+      display: none; justify-content: center; align-items: center;
+      opacity: 0; transition: opacity 0.3s;
+    }
+    .modal-overlay.open { display: flex; opacity: 1; }
+    
+    .modal-box {
+      background: var(--card-bg);
+      padding: 30px;
+      border-radius: 24px;
+      width: 90%; max-width: 400px;
+      border: 1px solid var(--border);
+      transform: scale(0.9); transition: transform 0.3s;
+    }
+    .modal-overlay.open .modal-box { transform: scale(1); }
+
+    .modal-title { margin-bottom: 20px; font-size: 1.2rem; }
+    
+    .input-group { margin-bottom: 15px; text-align: left; }
+    .input-group label { display: block; font-size: 0.8rem; color: var(--text-muted); margin-bottom: 6px; }
+    
+    .modal-input {
+      width: 100%; padding: 12px;
+      background: var(--input-bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      color: white;
+    }
+    
+    /* Estilo especial para o input file */
+    input[type="file"]::file-selector-button {
+      background: var(--primary);
+      color: #001a05;
+      padding: 8px 12px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      margin-right: 10px;
+      font-weight: 600;
+    }
+    input[type="file"] {
+        padding: 6px; /* Ajuste para o input file */
+    }
+
+    .modal-input:focus { border-color: var(--primary); }
+
+    .modal-actions { display: flex; gap: 10px; margin-top: 20px; }
+    .btn-save { flex: 1; background: var(--primary); color: #001a05; padding: 12px; border-radius: 12px; border: none; font-weight: 700; cursor: pointer; }
+    .btn-cancel { flex: 1; background: transparent; color: var(--text-muted); padding: 12px; border-radius: 12px; border: 1px solid var(--border); cursor: pointer; }
+
+    /* Preview no Modal */
+    .preview-container { text-align: center; margin-bottom: 15px; }
+    .preview-img { width: 80px; height: 80px; border-radius: 50%; object-fit: cover; border: 2px solid var(--primary); display: none; margin: 0 auto; }
+
+    /* Loading state */
+    .loading-overlay {
+      position: absolute; inset: 0;
+      background: var(--card-bg);
+      display: flex; justify-content: center; align-items: center;
+      z-index: 10;
+    }
+    .spinner { animation: spin 1s linear infinite; font-size: 2rem; color: var(--primary); }
+    @keyframes spin { 100% { transform: rotate(360deg); } }
+
+  </style>
+</head>
+<body>
+
+  <nav>
+    <div class="nav-left">
+      <a href="index.html" class="btn-back">
+        <i class="ph-bold ph-arrow-left"></i> Voltar
+      </a>
+      <a href="admin.html" class="btn-admin" id="btn-admin">
+        <i class="ph-bold ph-shield-check"></i> Admin
+      </a>
+    </div>
+
+    <button class="btn-logout" id="btn-logout">
+      <i class="ph-bold ph-sign-out"></i> Sair
+    </button>
+  </nav>
+
+  <div class="profile-card">
+    <div class="bg-gradient"></div>
+    
+    <div class="loading-overlay" id="loading-screen">
+      <i class="ph ph-spinner spinner"></i>
+    </div>
+
+    <div class="profile-header">
+      <div class="avatar-container">
+        <img src="https://ui-avatars.com/api/?name=User&background=0f172a&color=fff" alt="Avatar" class="avatar" id="ui-foto">
+        <button class="edit-btn" id="btn-open-edit"><i class="ph-bold ph-pencil-simple"></i></button>
+      </div>
+      
+      <div style="margin-bottom: 4px;">
+          <h2 class="user-name" style="display:inline;">
+              <span id="ui-nome">Carregando...</span>
+          </h2>
+          <span class="badge-title" id="ui-badge">...</span>
+      </div>
+
+      <a href="#" target="_blank" class="instagram-link" id="ui-instagram-link" style="display: none;">
+          <i class="ph-fill ph-instagram-logo"></i> <span id="ui-instagram-text">@usuario</span>
+      </a>
+      
+      <p class="user-bio" id="ui-bio">...</p>
+      
+      <div class="member-since">
+          <i class="ph ph-calendar-blank"></i> <span id="ui-member-since">Membro desde...</span>
+      </div>
+
+      <div class="stats-grid">
+        <div class="stat-box">
+          <div class="stat-value" id="ui-nivel">1</div>
+          <div class="stat-label">Nível</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-value" id="ui-xp">0</div>
+          <div class="stat-label">XP Total</div>
+        </div>
+      </div>
+
+      <div class="xp-container">
+        <div class="xp-info">
+          <span>Progresso</span>
+          <span id="ui-xp-next">0 / 500 XP</span>
+        </div>
+        <div class="progress-bg">
+          <div class="progress-fill" id="ui-progress-bar"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="edit-modal">
+    <div class="modal-box">
+      <h3 class="modal-title">Editar Perfil</h3>
+      
+      <div class="preview-container">
+          <img src="" id="img-preview" class="preview-img">
+      </div>
+
+      <div class="input-group">
+        <label>Nome de exibição</label>
+        <input type="text" class="modal-input" id="edit-nome">
+      </div>
+      
+      <div class="input-group">
+        <label>Instagram (sem @)</label>
+        <div style="position: relative;">
+            <span style="position: absolute; left: 12px; top: 12px; color: var(--text-muted);">@</span>
+            <input type="text" class="modal-input" id="edit-instagram" style="padding-left: 30px;">
+        </div>
+      </div>
+
+      <div class="input-group">
+        <label>Biografia</label>
+        <input type="text" class="modal-input" id="edit-bio" maxlength="100" placeholder="Uma frase curta sobre você">
+      </div>
+
+      <div class="input-group">
+        <label>Foto de Perfil</label>
+        <input type="file" class="modal-input" id="edit-foto-file" accept="image/*">
+        <p style="font-size: 0.7rem; color: var(--text-muted); margin-top: 5px;">Recomendado: Imagens quadradas (jpg, png)</p>
+      </div>
+
+      <div class="modal-actions">
+        <button class="btn-cancel" id="btn-close-modal">Cancelar</button>
+        <button class="btn-save" id="btn-save-profile">Salvar</button>
+      </div>
+    </div>
+  </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getAuth, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+    import { getFirestore, doc, onSnapshot, setDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+    // IMPORTANTE: Adicionado o Storage
+    import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-storage.js";
+
+    // --- CONFIGURAÇÃO ---
+    const firebaseConfig = {
+        apiKey: "AIzaSyBEOpVc1EskZVgGkaegdKzA_WOk5C2qfO8",
+        authDomain: "dursmsge0.firebaseapp.com",
+        projectId: "dursmsge0",
+        storageBucket: "dursmsge0.firebasestorage.app", // Verifique se isso está correto no seu console
+        messagingSenderId: "874076135664",
+        appId: "1:874076135664:web:b04b0fa32c0a09948f2235"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+    const storage = getStorage(app); 
+
+    // --- DEFINA O E-MAIL DO ADMINISTRADOR AQUI ---
+    const ADMIN_EMAIL = "seuemail@admin.com"; 
+
+    // Variáveis Globais
+    let currentUserUid = null;
+    let currentUserRef = null;
+
+    // Elementos UI
+    const uiNome = document.getElementById('ui-nome');
+    const uiBio = document.getElementById('ui-bio');
+    const uiNivel = document.getElementById('ui-nivel');
+    const uiXP = document.getElementById('ui-xp');
+    const uiFoto = document.getElementById('ui-foto');
+    const uiProgress = document.getElementById('ui-progress-bar');
+    const uiXpNext = document.getElementById('ui-xp-next');
+    const uiBadge = document.getElementById('ui-badge');
+    const uiMemberSince = document.getElementById('ui-member-since');
+    const uiInstaLink = document.getElementById('ui-instagram-link');
+    const uiInstaText = document.getElementById('ui-instagram-text');
+    const loadingScreen = document.getElementById('loading-screen');
+    const btnAdmin = document.getElementById('btn-admin'); // Referência ao botão Admin
+
+    // Elementos Modal
+    const modal = document.getElementById('edit-modal');
+    const editNome = document.getElementById('edit-nome');
+    const editBio = document.getElementById('edit-bio');
+    const editFotoFile = document.getElementById('edit-foto-file'); 
+    const editInstagram = document.getElementById('edit-instagram');
+    const imgPreview = document.getElementById('img-preview');
+
+    // --- 1. AUTH STATE ---
+    onAuthStateChanged(auth, (user) => {
+        if (user) {
+            currentUserUid = user.uid;
+            currentUserRef = doc(db, "users", currentUserUid);
+            
+            // VERIFICA SE É O ADMIN
+            if (user.email === ADMIN_EMAIL) {
+                btnAdmin.style.display = 'flex'; // Torna visível
+            }
+
+            const creationDate = new Date(user.metadata.creationTime);
+            const options = { year: 'numeric', month: 'long', day: 'numeric' };
+            uiMemberSince.innerText = `Membro desde ${creationDate.toLocaleDateString('pt-BR', options)}`;
+
+            iniciarMonitoramento();
+        } else {
+            window.location.href = "login.html";
+        }
+    });
+
+    // --- 2. MONITORAMENTO ---
+    function iniciarMonitoramento() {
+        onSnapshot(currentUserRef, (docSnap) => {
+            loadingScreen.style.display = 'none';
+            if (docSnap.exists()) {
+                atualizarTela(docSnap.data());
+            } else {
+                atualizarTela({ nome: "Novo Usuário", bio: "Bem-vindo!" });
+            }
+        }, (error) => {
+            console.error(error);
+        });
+    }
+
+    // --- 3. ATUALIZA TELA ---
+    function atualizarTela(data) {
+        uiNome.innerText = data.nome || "Estudante";
+        uiBio.innerText = data.bio || "Sem biografia.";
+        uiNivel.innerText = data.nivel || 1;
+        uiXP.innerText = data.xp || 0;
+
+        const lvl = data.nivel || 1;
+        let titulo = "Novato";
+        if(lvl >= 5) titulo = "Explorador";
+        if(lvl >= 10) titulo = "Veterano";
+        if(lvl >= 20) titulo = "Mestre";
+        if(lvl >= 50) titulo = "Lenda";
+        uiBadge.innerText = titulo;
+
+        if (data.foto && data.foto.trim() !== "") {
+            uiFoto.src = data.foto;
+        } else {
+            uiFoto.src = `https://ui-avatars.com/api/?name=${data.nome || 'User'}&background=05df34&color=001a05`;
+        }
+
+        if (data.instagram && data.instagram.trim() !== "") {
+            uiInstaLink.style.display = "inline-flex";
+            uiInstaLink.href = `https://instagram.com/${data.instagram.replace('@', '')}`;
+            uiInstaText.innerText = "@" + data.instagram.replace('@', '');
+        } else {
+            uiInstaLink.style.display = "none";
+        }
+
+        const currentLevel = parseInt(data.nivel) || 1;
+        const currentXP = parseInt(data.xp) || 0;
+        const xpTarget = currentLevel * 500;
+        let percentage = (currentXP / xpTarget) * 100;
+        if (percentage > 100) percentage = 100;
+        if (isNaN(percentage)) percentage = 0;
+
+        uiProgress.style.width = `${percentage}%`;
+        uiXpNext.innerText = `${currentXP} / ${xpTarget} XP`;
+    }
+
+    // --- 4. LOGOUT ---
+    function logoutSistema() {
+        localStorage.removeItem('user_data');
+        signOut(auth).then(() => {
+            window.location.href = "login.html";
+        });
+    }
+
+    document.getElementById('btn-logout').addEventListener('click', () => {
+        if(confirm("Sair da conta?")) logoutSistema();
+    });
+
+    // --- 5. MODAL EDIT & UPLOAD ---
+    const btnOpen = document.getElementById('btn-open-edit');
+    const btnClose = document.getElementById('btn-close-modal');
+    const btnSave = document.getElementById('btn-save-profile');
+
+    // Listener para Preview da Imagem
+    editFotoFile.addEventListener('change', function(event) {
+        const file = event.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                imgPreview.src = e.target.result;
+                imgPreview.style.display = "block";
+            }
+            reader.readAsDataURL(file);
+        }
+    });
+
+    btnOpen.addEventListener('click', () => {
+        editNome.value = uiNome.innerText;
+        const currentBio = uiBio.innerText;
+        editBio.value = (currentBio === "Sem biografia." || currentBio === "Bem-vindo!") ? "" : currentBio;
+        
+        // Limpa inputs de arquivo e preview
+        editFotoFile.value = ""; 
+        imgPreview.style.display = "none";
+        imgPreview.src = "";
+
+        const currentInsta = uiInstaText.innerText;
+        editInstagram.value = (currentInsta === "@usuario" || uiInstaLink.style.display === "none") ? "" : currentInsta.replace('@','');
+
+        modal.classList.add('open');
+    });
+
+    btnClose.addEventListener('click', () => {
+        modal.classList.remove('open');
+    });
+
+    btnSave.addEventListener('click', async () => {
+        const novoNome = editNome.value;
+        const novaBio = editBio.value;
+        const novoInsta = editInstagram.value;
+        const arquivoFoto = editFotoFile.files[0]; // Pega o arquivo real
+
+        if(!novoNome) return alert("O nome não pode ficar vazio.");
+
+        btnSave.innerText = "Salvando...";
+        btnSave.disabled = true;
+
+        try {
+            let fotoUrlFinal = null;
+
+            // Lógica de Upload (só se tiver arquivo selecionado)
+            if (arquivoFoto) {
+                btnSave.innerText = "Enviando foto...";
+                // Cria referência: avatars/UID_DO_USUARIO
+                const storageRef = ref(storage, `avatars/${currentUserUid}`);
+                
+                // Upload
+                await uploadBytes(storageRef, arquivoFoto);
+                
+                // Pega o link público
+                fotoUrlFinal = await getDownloadURL(storageRef);
+            }
+
+            // Prepara dados para o Firestore
+            const updateData = {
+                nome: novoNome,
+                bio: novaBio,
+                instagram: novoInsta
+            };
+            
+            // Se fez upload, atualiza a url da foto também
+            if(fotoUrlFinal) {
+                updateData.foto = fotoUrlFinal;
+            }
+
+            await setDoc(currentUserRef, updateData, { merge: true });
+            modal.classList.remove('open');
+
+        } catch (error) {
+            console.error(error);
+            alert("Erro ao salvar: " + error.message);
+        } finally {
+            btnSave.innerText = "Salvar";
+            btnSave.disabled = false;
+        }
+    });
+
+  </script>
+</body>
+</html>

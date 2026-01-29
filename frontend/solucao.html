@@ -1,0 +1,527 @@
+<!doctype html>
+<html lang="pt-BR" data-theme="dark">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Soluções e Propostas - Durmsgeo IFRN</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="css/style.css">
+
+  <style>
+    :root {
+      --primary: #05df34;       
+      --primary-dark: #004d40;
+      --accent: #FFC107;        
+      
+      --bg-body: #0e0d0d;
+      --bg-section-alt: #1a1a1a;
+      --bg-card: #151515;
+      
+      --text-main: #f1f5f9;      
+      --text-muted: #94a3b8;     
+      
+      --nav-bg: rgba(0, 0, 0, 0.85);
+      --nav-border: rgba(255,255,255,0.15);
+      --nav-text: #f1f5f9;
+
+      --card-border: rgba(255, 255, 255, 0.1);
+      --shadow-card: 0 10px 15px -3px rgba(0, 0, 0, 0.5);
+      
+      --radius: 16px;
+    }
+
+    [data-theme="light"] {
+      --primary: #00a82d; 
+      --primary-dark: #00332a;
+      --accent: #d4a000; 
+
+      --bg-body: #f8f9fa;
+      --bg-section-alt: #e9ecef;
+      --bg-card: #ffffff;
+
+      --text-main: #1e293b;
+      --text-muted: #64748b;
+
+      --nav-bg: rgba(255, 255, 255, 0.9);
+      --nav-border: rgba(0,0,0,0.1);
+      --nav-text: #1e293b;
+
+      --card-border: rgba(0, 0, 0, 0.1);
+      --shadow-card: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: var(--bg-body);
+      color: var(--text-main);
+      line-height: 1.6;
+      overflow-x: hidden;
+      transition: background-color 0.4s ease, color 0.4s ease, font-size 0.3s ease;
+    }
+
+    .container { max-width: 1100px; margin: 0 auto; padding: 0 20px; }
+    h2 { font-size: 2.2rem; margin-bottom: 25px; color: var(--primary); transition: color 0.3s; }
+
+    .site-nav {
+      position: sticky; top: 20px; margin: 0 auto; width: 90%; max-width: 1000px;
+      background: var(--nav-bg); backdrop-filter: blur(12px); padding: 15px 30px;
+      border-radius: 50px; display: flex; justify-content: center; gap: 25px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1); z-index: 1000; 
+      border: 1px solid var(--nav-border);
+      transition: background 0.4s, border 0.4s;
+    }
+    .site-nav a { text-decoration: none; color: var(--nav-text); font-weight: 600; font-size: 0.95rem; transition: 0.3s; position: relative; }
+    .site-nav a:hover { color: var(--primary); }
+    .site-nav a.active { color: var(--primary); font-weight: 800; }
+    .site-nav a::after { content: ''; position: absolute; width: 0; height: 2px; bottom: -4px; left: 0; background-color: var(--accent); transition: width 0.3s; }
+    .site-nav a:hover::after { width: 100%; }
+
+    .mobile-menu-btn {
+      display: none; 
+      position: fixed; top: 20px; left: 20px; z-index: 3000;
+      background: var(--nav-bg); backdrop-filter: blur(10px);
+      border: 1px solid var(--nav-border); color: var(--primary);
+      width: 50px; height: 50px; border-radius: 12px;
+      cursor: pointer; align-items: center; justify-content: center;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+      transition: transform 0.2s, background 0.3s;
+    }
+    .mobile-menu-btn:hover { transform: scale(1.05); background: var(--bg-card); }
+    .mobile-menu-btn svg { width: 28px; height: 28px; fill: currentColor; }
+
+    .mobile-backdrop {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0, 0, 0, 0.6); z-index: 3001;
+      opacity: 0; visibility: hidden; transition: opacity 0.3s ease, visibility 0.3s;
+      backdrop-filter: blur(3px);
+    }
+    .mobile-backdrop.active { opacity: 1; visibility: visible; }
+
+    .mobile-menu-overlay {
+      position: fixed; top: 0; left: 0; width: 280px; height: 100%;
+      background: var(--bg-card); border-right: 1px solid var(--card-border);
+      z-index: 3002; padding: 30px 20px;
+      display: flex; flex-direction: column; gap: 20px;
+      box-shadow: 5px 0 25px rgba(0,0,0,0.5);
+      transform: translateX(-100%); transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .mobile-menu-overlay.active { transform: translateX(0); }
+    
+    .mobile-menu-overlay h3 {
+      color: var(--primary); margin-bottom: 20px; font-size: 1.5rem;
+      border-bottom: 1px solid var(--nav-border); padding-bottom: 15px;
+    }
+    .mobile-menu-overlay a {
+      text-decoration: none; color: var(--text-main); font-size: 1.1rem;
+      font-weight: 600; padding: 10px; border-radius: 8px;
+      transition: background 0.2s, color 0.2s;
+    }
+    .mobile-menu-overlay a:hover {
+      background: rgba(255,255,255,0.05); color: var(--primary); padding-left: 15px;
+    }
+
+    .hero-outer {
+      background: radial-gradient(circle at top right, #00695c, #004d40);
+      color: white; padding: 40px 0 80px 0; position: relative; overflow: hidden;
+      border-bottom-left-radius: 60px; border-bottom-right-radius: 60px; border-bottom: 4px solid var(--accent);
+    }
+    .blob { position: absolute; background: rgba(255, 255, 255, 0.05); border-radius: 50%; animation: float 20s infinite ease-in-out; z-index: 0; }
+    .blob-1 { width: 400px; height: 400px; top: -100px; left: -100px; }
+    .blob-2 { width: 300px; height: 300px; bottom: -50px; right: -50px; }
+    @keyframes float { 0%, 100% { transform: translate(0, 0); } 50% { transform: translate(30px, 40px); } }
+
+    .hero { display: flex; align-items: center; justify-content: space-between; max-width: 1200px; margin: 0 auto; padding: 40px 20px; position: relative; z-index: 1; gap: 40px; flex-wrap: wrap; }
+    .hero-content { flex: 1; min-width: 300px; }
+    .brand-logos { display: flex; gap: 20px; margin-bottom: 30px; align-items: center; }
+    .brand-logos img { height: 60px; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.2)); }
+    
+    .hero-title { 
+      font-size: 3rem; font-weight: 900; line-height: 1.1; margin-bottom: 15px; 
+      background: linear-gradient(to right, #ffffff, var(--accent)); 
+      background-clip: text; -webkit-background-clip: text; -webkit-text-fill-color: transparent; 
+    }
+    
+    .hero-sub { font-size: 1.2rem; color: rgba(255,255,255,0.9); margin-bottom: 40px; max-width: 500px; }
+    .hero-visual img { max-width: 100%; height: auto; animation: gentle-float 6s ease-in-out infinite; }
+    @keyframes gentle-float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
+    
+    .btn { display: inline-block; transition: transform 0.2s; cursor: pointer; }
+    .btn:hover { transform: scale(1.05); }
+
+    .section { padding: 80px 0; transition: background-color 0.4s; }
+    .section-alt { background: var(--bg-section-alt); }
+
+    .problems-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin-top: 30px; }
+    
+    .problem-card {
+      background: var(--bg-card); padding: 30px; border-radius: var(--radius);
+      box-shadow: var(--shadow-card); border: 1px solid var(--card-border);
+      border-left: 5px solid var(--primary); transition: 0.3s;
+    }
+    .problem-card:hover { transform: translateY(-5px); border-color: var(--accent); }
+    .problem-header { display: flex; align-items: center; gap: 15px; margin-bottom: 15px; }
+    .problem-icon { font-size: 2rem; }
+    .problem-card h3 { margin: 0; font-size: 1.3rem; color: var(--text-main); }
+    .problem-card p { font-size: 0.95rem; color: var(--text-muted); line-height: 1.6; }
+
+    .highlight-box {
+      border-left: 4px solid var(--accent);
+      background: rgba(255, 193, 7, 0.05);
+      padding: 20px 25px; margin: 30px 0;
+      border-radius: 0 10px 10px 0;
+      font-style: italic; color: var(--text-main);
+      border: 1px solid var(--card-border); border-left: 4px solid var(--accent);
+    }
+
+    .project-images { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; margin: 40px 0; }
+    
+    .project-img-card {
+      background: var(--bg-card); padding: 15px; border-radius: var(--radius);
+      box-shadow: var(--shadow-card); border: 1px solid var(--card-border);
+      transition: transform 0.3s ease; cursor: pointer;
+    }
+    .project-img-card:hover { transform: scale(1.02); border-color: var(--accent); }
+    
+    .project-img-card img {
+      width: 100%; height: 300px; object-fit: cover; border-radius: 10px; display: block;
+    }
+    
+    .project-img-caption { text-align: center; padding-top: 15px; font-weight: 600; color: var(--text-muted); }
+    
+    .msg-motivacional {
+      display: none; color: var(--primary); font-weight: 800; font-style: italic;
+      margin-top: 5px; font-size: 1.1rem; text-align: center; animation: fadeIn 0.8s;
+    }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+    /* --- CONTROLES FLUTUANTES (ZOOM, TEMA, MIC) --- */
+    .controls-wrapper { 
+      position: fixed; bottom: 30px; right: 20px; z-index: 2000; 
+      display: flex; flex-direction: column; gap: 15px; align-items: center;
+    }
+    .btn-float { 
+      width: 50px; height: 50px; border-radius: 50%; 
+      background: var(--primary); border: none; color: white; 
+      cursor: pointer; display: flex; align-items: center; justify-content: center; 
+      box-shadow: 0 4px 10px rgba(0,0,0,0.3); transition: 0.2s; 
+      position: relative;
+    }
+    .btn-float:hover { transform: scale(1.1); background: var(--primary-dark); }
+    .btn-float svg { width: 24px; height: 24px; fill: currentColor; }
+
+    .zoom-menu {
+      display: none; flex-direction: column; gap: 8px; margin-bottom: 5px;
+      background: rgba(0,0,0,0.8); padding: 8px; border-radius: 25px; border: 1px solid var(--primary);
+    }
+    .zoom-menu.active { display: flex; animation: fadeIn 0.3s; }
+    .zoom-btn-small {
+      width: 35px; height: 35px; border-radius: 50%;
+      background: #333; color: var(--primary); border: 1px solid var(--primary);
+      font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1.2rem;
+    }
+    .zoom-btn-small:hover { background: var(--primary); color: #000; }
+
+    .theme-icon-sun { display: none; }
+    [data-theme="light"] .theme-icon-moon { display: none; }
+    [data-theme="light"] .theme-icon-sun { display: block; }
+    [data-theme="light"] .btn-float.theme-btn { color: #fff; } 
+
+    .footer { background: #050b14; color: #64748b; text-align: center; padding: 40px 20px; border-top: 1px solid rgba(255,255,255,0.05); }
+
+    @media (max-width: 992px) {
+      .site-nav { display: none; }
+      .mobile-menu-btn { display: flex; }
+      .hero-title { font-size: 2.5rem; }
+      .hero { flex-direction: column-reverse; text-align: center; }
+    }
+  </style>
+</head>
+
+<body>
+
+  <button class="mobile-menu-btn" onclick="toggleMobileMenu()" aria-label="Abrir Menu">
+    <svg viewBox="0 0 24 24"><path d="M3 6h18v2H3V6zm0 5h18v2H3v-2zm0 5h18v2H3v-2z"/></svg>
+  </button>
+
+  <div class="mobile-backdrop" id="mobileBackdrop" onclick="toggleMobileMenu()"></div>
+
+  <div class="mobile-menu-overlay" id="mobileMenu">
+    <h3>Menu</h3>
+    <a href="index.html" onclick="toggleMobileMenu()">Início</a>
+    <a href="quem-somos.html" onclick="toggleMobileMenu()">Quem Somos</a>
+    <a href="entenda-problema.html" onclick="toggleMobileMenu()">Problemas</a>
+    <a href="educacao.html" onclick="toggleMobileMenu()">Educação</a> 
+    <a href="solucao.html" onclick="toggleMobileMenu()" style="color:var(--primary);">Soluções</a>
+    <a href="mapa-risco.html" onclick="toggleMobileMenu()">Mapa de Risco</a>
+    <a href="quiz.html" onclick="toggleMobileMenu()">Quiz</a>
+  </div>
+
+  <div class="controls-wrapper">
+    <button class="btn-float theme-btn" id="themeToggle" title="Alternar Tema">
+      <svg class="theme-icon-moon" viewBox="0 0 24 24"><path d="M12 3c-4.97 0-9 4.03-9 9s4.03 9 9 9 9-4.03 9-9c0-.46-.04-.92-.1-1.36-.98 1.37-2.58 2.26-4.4 2.26-2.98 0-5.4-2.42-5.4-5.4 0-1.81.89-3.42 2.26-4.4-.44-.06-.9-.1-1.36-.1z"/></svg>
+      <svg class="theme-icon-sun" viewBox="0 0 24 24"><path d="M6.76 4.84l-1.8-1.79-1.41 1.41 1.79 1.79 1.42-1.41zM4 10.5H1v2h3v-2zm9-9.95h-2V3.5h2V.55zm7.45 3.91l-1.41-1.41-1.79 1.79 1.41 1.41 1.79-1.79zm-3.21 13.7l1.79 1.8 1.41-1.41-1.8-1.79-1.4 1.4zM20 10.5v2h3v-2h-3zm-8-5c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6-2.69-6-6-6zm-1 16.95h2V19.5h-2v2.95zm-7.45-3.91l1.41 1.41 1.79-1.8-1.41-1.41-1.79 1.8z"/></svg>
+    </button>
+    
+    <div id="zoomMenuContainer" class="zoom-menu">
+        <button class="zoom-btn-small" onclick="changeZoom(0.1)" title="Aumentar">+</button>
+        <button class="zoom-btn-small" onclick="changeZoom(-0.1)" title="Diminuir">-</button>
+    </div>
+    <button class="btn-float" title="Acessibilidade / Zoom" onclick="toggleZoomMenu()">
+        <svg viewBox="0 0 24 24"><path d="M11 2a9 9 0 1 0 5.93 15.93l4.38 4.38 1.41-1.41-4.38-4.38A9 9 0 0 0 11 2Zm0 2a7 7 0 1 1 0 14 7 7 0 0 1 0-14Zm-1 3h2v3h3v2h-3v3h-2v-3H7v-2h3V7Z"/></svg>
+    </button>
+
+    <button class="btn-float" title="Comando de Voz">
+      <svg viewBox="0 0 24 24"><path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z"/><path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z"/></svg>
+    </button>
+  </div>
+
+  <header class="hero-outer">
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+
+    <nav class="site-nav" role="navigation">
+      <a href="index.html">Início</a>
+      <a href="quem-somos.html">Quem Somos</a>
+      <a href="entenda-problema.html">Problemas</a>
+      <a href="educacao.html">Educação</a> 
+      <a href="solucao.html" class="active" style="color:var(--primary); font-weight:700;">Soluções</a>
+      <a href="mapa-risco.html">Mapa</a>
+      <a href="quiz.html">Quiz</a>
+    </nav>
+
+    <div class="hero">
+      <div class="hero-content">
+        <div class="brand-logos">
+        <img src="assets/logo2.png" alt="Logo Lateral">
+        <img src="assets/image.png" alt="Logo Principal">
+        <img src="assets/aliança.jpg" alt="Logo Lateral">
+        <img src="assets/if.png" alt="Logo Lateral">
+        </div>
+        <h1 class="hero-title">Soluções Propostas</h1>
+        <p class="hero-sub">Descarte correto, infraestrutura e áreas verdes: caminhos para transformar o Nossa Senhora da Apresentação.</p>
+        <div class="hero-ctas">
+          <a class="btn" href="#intervencao" style="background:var(--accent); color:#004d40; padding:14px 32px; border-radius:50px; text-decoration:none; font-weight:700; display:inline-block;">Ver Projetos</a>
+        </div>
+      </div>
+      <div class="hero-visual">
+        <img src="assets/logo.png" alt="Ilustração Soluções">
+      </div>
+    </div>
+  </header>
+
+  <main id="content">
+
+    <section class="section">
+      <div class="container">
+        <h2>Descarte Correto do Lixo</h2>
+        <p>
+          O descarte correto do lixo ajuda a reduzir o entupimento de bueiros e bocas de lobo, facilitando o escoamento da água da chuva. 
+          Quando resíduos são jogados nas ruas ou em terrenos baldios, a água não consegue escoar e acaba retornando para as vias e casas.
+        </p>
+        <br>
+        <p>
+          Além disso, o descarte inadequado desses resíduos contribui também para o entupimento das tubulações de drenagem. 
+          Quando as águas pluviais não conseguem passar de modo fluido, elas causam pressão em uma determinada área dessas tubulações, 
+          podendo gerar rompimentos e vazamentos, acelerando o processo de intemperismo diretamente no solo.
+        </p>
+      </div>
+    </section>
+
+    <section class="section section-alt">
+      <div class="container">
+        <h2>Compreensão Ampla do Problema</h2>
+        <p>
+          Devemos compreender que tais problemáticas acontecem por um conjunto de fatores sociais, ambientais e políticos, 
+          que foram construídos ao decorrer da história do bairro.
+        </p>
+        
+        <div class="highlight-box">
+          <p><strong>Reflexão:</strong> Compreender que os alagamentos e intemperismo acelerado são causados pela combinação de chuvas intensas, falta de vegetação, impermeabilização do solo e entupimento da drenagem ajuda a enxergar o problema de forma mais ampla.</p>
+        </div>
+
+        <p>
+          Embora a participação da população seja fundamental, os alagamentos e crateras estão ligados a problemas estruturais, 
+          como drenagem inadequada e ausência de planejamento urbano. Dessa forma, as ações individuais não conseguem solucionar 
+          sozinhas uma problemática que é estrutural.
+        </p>
+      </div>
+    </section>
+
+    <section class="section" id="intervencao">
+      <div class="container">
+        <h2>Criação e Recuperação das Áreas Verdes</h2>
+        <p>
+          A implantação de áreas verdes, como a criação de canteiros e a revegetação, é uma medida importante para reduzir os impactos dos alagamentos. 
+          A vegetação auxilia na infiltração da água da chuva e diminui o escoamento superficial.
+        </p>
+        
+        <h3 style="margin-top:40px; color:var(--accent);">Nossa Proposta de Intervenção</h3>
+        <p>Indicamos dois locais que merecem atenção: A <strong>"Praça do V"</strong> e os arredores da <strong>Lagoa de Captação do Aliança</strong>.</p>
+
+        <div class="project-images">
+            
+            <div class="project-img-card" id="card-interativo" title="Clique para ver a transformação!">
+               <img id="img-praca" src="assets/praca_antes.jpg" alt="Situação atual da Praça do V">
+               
+               <div id="legenda-padrao" class="project-img-caption">
+                 👆 <strong>Clique na imagem</strong>: Ver Proposta da Praça
+               </div>
+               <div id="legenda-motivacional" class="msg-motivacional">
+                 "Já imaginou se essa paisagem fosse realmente assim?"
+               </div>
+            </div>
+            
+            <div class="project-img-card" id="card-interativo-lagoa" title="Clique para ver a transformação!">
+               <img id="img-lagoa" src="assets/lagoa_antes.jpg" alt="Situação atual da Lagoa">
+               
+               <div id="legenda-padrao-lagoa" class="project-img-caption">
+                 👆 <strong>Clique na imagem</strong>: Ver Proposta da Lagoa
+               </div>
+               <div id="legenda-motivacional-lagoa" class="msg-motivacional">
+                 "E se o poder público transformasse essa paisagem?"
+               </div>
+            </div>
+
+        </div>
+
+        <p style="font-size: 0.9rem; color: var(--text-muted); text-align:center; border-top:1px solid var(--card-border); padding-top:20px;">
+           <strong>Nota:</strong> Devemos nos lembrar que tal execução cabe à Prefeitura. Sem investimentos públicos, essa medida torna-se inviável.
+        </p>
+      </div>
+    </section>
+
+    <section class="section section-alt">
+      <div class="container">
+        <h2>Infraestrutura e Síntese</h2>
+        <p style="margin-bottom:30px;">
+           A resolução definitiva passa, sobretudo, por obras de grande porte: manutenção das tubulações, ampliação da rede de drenagem e limpeza das lagoas.
+        </p>
+
+        <div class="problems-grid">
+            <div class="problem-card">
+               <div class="problem-header"><span class="problem-icon">🏗️</span><h3>Poder Público</h3></div>
+               <p>Investimento pesado em infraestrutura, drenagem urbana e manutenção preventiva.</p>
+            </div>
+
+            <div class="problem-card">
+               <div class="problem-header"><span class="problem-icon">🌳</span><h3>Meio Ambiente</h3></div>
+               <p>Criação de áreas verdes para auxiliar na infiltração da água e reduzir o calor.</p>
+            </div>
+
+            <div class="problem-card">
+               <div class="problem-header"><span class="problem-icon">👥</span><h3>População</h3></div>
+               <p>Descarte correto do lixo, conscientização e cobrança ativa por direitos.</p>
+            </div>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <p>© 2025 IFRN - Durmsgeo · <strong>Projeto Aliança Drenante</strong></p>
+    </div>
+  </footer>
+
+  <script src="js/script.js" defer></script>
+  <script src="js/player-musica.js" defer></script>
+  
+  <script>
+    function toggleMobileMenu() {
+      const menu = document.getElementById('mobileMenu');
+      const backdrop = document.getElementById('mobileBackdrop');
+      menu.classList.toggle('active');
+      backdrop.classList.toggle('active');
+    }
+
+    const themeBtn = document.getElementById('themeToggle');
+    const htmlEl = document.documentElement;
+    const savedTheme = localStorage.getItem('theme');
+    const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    
+    if (savedTheme) { htmlEl.setAttribute('data-theme', savedTheme); } 
+    else if (!systemPrefersDark) { htmlEl.setAttribute('data-theme', 'light'); }
+
+    themeBtn.addEventListener('click', () => {
+      const currentTheme = htmlEl.getAttribute('data-theme');
+      const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+      htmlEl.setAttribute('data-theme', newTheme);
+      localStorage.setItem('theme', newTheme);
+    });
+
+    let currentZoom = 1;
+    function toggleZoomMenu() {
+        const menu = document.getElementById('zoomMenuContainer');
+        menu.classList.toggle('active');
+    }
+
+    function changeZoom(delta) {
+        currentZoom += delta;
+        if (currentZoom < 0.8) currentZoom = 0.8;
+        if (currentZoom > 1.5) currentZoom = 1.5;
+        document.body.style.fontSize = `${currentZoom}rem`;
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const card = document.getElementById('card-interativo');
+        const img = document.getElementById('img-praca');
+        const legPadrao = document.getElementById('legenda-padrao');
+        const legMotiv = document.getElementById('legenda-motivacional');
+        
+        let transformado = false; 
+        const imgAntes = 'assets/praca_antes.jpg';  
+        const imgDepois = 'assets/praca_depois.jpg';
+
+        if(card && img) {
+            card.addEventListener('click', function() {
+                if (!transformado) {
+                    img.src = imgDepois;
+                    legPadrao.style.display = 'none';
+                    legMotiv.style.display = 'block';
+                    transformado = true;
+                } else {
+                    img.src = imgAntes;
+                    legPadrao.style.display = 'block';
+                    legMotiv.style.display = 'none';
+                    transformado = false;
+                }
+            });
+        }
+
+        const cardLagoa = document.getElementById('card-interativo-lagoa');
+        const imgLagoa = document.getElementById('img-lagoa');
+        const legPadraoLagoa = document.getElementById('legenda-padrao-lagoa');
+        const legMotivLagoa = document.getElementById('legenda-motivacional-lagoa');
+        
+        let transformadoLagoa = false;
+        const imgAntesLagoa = 'assets/lagoa_antes.jpg';  
+        const imgDepoisLagoa = 'assets/lagoa_depois.jpg'; 
+
+        if(cardLagoa && imgLagoa) {
+            cardLagoa.addEventListener('click', function() {
+                if (!transformadoLagoa) {
+                    imgLagoa.src = imgDepoisLagoa;
+                    legPadraoLagoa.style.display = 'none';
+                    legMotivLagoa.style.display = 'block';
+                    transformadoLagoa = true;
+                } else {
+                    imgLagoa.src = imgAntesLagoa;
+                    legPadraoLagoa.style.display = 'block';
+                    legMotivLagoa.style.display = 'none';
+                    transformadoLagoa = false;
+                }
+            });
+        }
+    });
+  </script>
+
+</body>
+</html>

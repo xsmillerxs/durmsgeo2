@@ -1,0 +1,783 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Durmsgeo - IFRN | Aliança Drenante</title>
+
+  <meta name="description" content="Projeto Aliança Drenante - IFRN Zona Norte. Soluções e gamificação para drenagem urbana." />
+  <meta name="author" content="IFRN - Durmsgeo" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="css/style.css">
+
+  <style>
+    :root {
+      --primary: #05df34;       
+      --primary-dark: #004d40;
+      --accent: #FFC107;        
+      --bg-body: #0e0d0d;
+      --bg-section-alt: #1a1a1a;
+      --bg-card: #0e0d0d;
+      --text-main: #148d2f;      
+      --text-muted: #05df34;     
+      --nav-bg: rgba(255, 255, 255, 0.85);
+      --nav-border: rgba(0,0,0,0.05);
+      --card-border: rgba(255, 255, 255, 0.1);
+      --shadow-card: 0 10px 15px -3px rgba(0, 0, 0, 0.5), 0 4px 6px -2px rgba(0, 0, 0, 0.3);
+      --radius: 16px;
+    }
+
+    [data-theme="dark"] {
+      --bg-body: #0f172a; 
+      --bg-section-alt: #1e293b; 
+      --bg-card: #1e293b;        
+      --text-main: #f1f5f9;      
+      --text-muted: #94a3b8;     
+      --nav-bg: rgba(15, 23, 42, 0.85);
+      --nav-border: rgba(255,255,255,0.1);
+      --card-border: rgba(255,255,255,0.05);
+      --shadow-card: 0 10px 15px -3px rgba(0, 0, 0, 0.5);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: var(--bg-body);
+      color: var(--text-main);
+      line-height: 1.6;
+      overflow-x: hidden;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+    .site-nav {
+      position: sticky; top: 20px; margin: 0 auto; width: 90%; max-width: 1000px;
+      background: var(--nav-bg); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+      padding: 15px 30px; border-radius: 50px; display: flex; justify-content: center;
+      gap: 25px; box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1); z-index: 1000; flex-wrap: wrap;
+      border: 1px solid var(--nav-border); transition: background 0.3s ease, border 0.3s ease;
+    }
+    .site-nav a { text-decoration: none; color: var(--text-main); font-weight: 600; font-size: 0.95rem; transition: color 0.3s ease; position: relative; }
+    .site-nav a:hover { color: var(--primary); }
+    .site-nav a::after { content: ''; position: absolute; width: 0; height: 2px; bottom: -4px; left: 0; background-color: var(--accent); transition: width 0.3s; }
+    .site-nav a:hover::after { width: 100%; }
+
+    .mobile-menu-btn {
+      display: none;
+      position: absolute;
+      top: 25px;
+      left: 20px;
+      z-index: 2000;
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 8px;
+      padding: 8px;
+      cursor: pointer;
+      backdrop-filter: blur(5px);
+    }
+    .mobile-menu-btn svg {
+      width: 30px;
+      height: 30px;
+      fill: white;
+    }
+
+    .mobile-menu-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 280px; 
+      height: 100vh;
+      background: var(--bg-section-alt);
+      z-index: 1999;
+      padding: 80px 30px 30px 30px;
+      box-shadow: 5px 0 15px rgba(0,0,0,0.5);
+      transform: translateX(-100%);
+      transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      border-right: 1px solid var(--card-border);
+    }
+
+    .mobile-menu-overlay.active {
+      transform: translateX(0);
+    }
+
+    .mobile-menu-overlay a {
+      color: var(--text-main);
+      text-decoration: none;
+      font-size: 1.2rem;
+      font-weight: 600;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+      padding-bottom: 10px;
+      transition: color 0.3s;
+    }
+    .mobile-menu-overlay a:hover {
+      color: var(--primary);
+      padding-left: 10px;
+    }
+
+    .mobile-backdrop {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0,0,0,0.6);
+      z-index: 1998;
+      backdrop-filter: blur(2px);
+    }
+    .mobile-backdrop.active { display: block; }
+
+    .hero-outer {
+      background: radial-gradient(circle at top right, #00695c, #004d40);
+      color: white; padding-top: 40px; padding-bottom: 80px; position: relative; overflow: hidden;
+      border-bottom-left-radius: 60px; border-bottom-right-radius: 60px; border-bottom: 4px solid var(--accent);
+    }
+    
+    .hero {
+      display: grid;
+      grid-template-columns: 1.2fr 1fr auto; 
+      gap: 30px;
+      align-items: center;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 40px 20px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero-left {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .hero-title { 
+      font-size: 3rem; 
+      font-weight: 900; 
+      line-height: 1.1; 
+      margin-bottom: 15px; 
+      background: linear-gradient(to right, #ffffff, #FFC107); 
+      background-clip: text; 
+      -webkit-background-clip: text; 
+      -webkit-text-fill-color: transparent; 
+      color: transparent; 
+    }
+    .hero-sub { font-size: 1.2rem; color: rgba(255,255,255,0.9); margin-bottom: 40px; max-width: 500px; }
+    
+    .hero-ctas {
+      display: flex;
+      gap: 15px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .hero-center {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .hero-center img { 
+      max-width: 100%; 
+      height: auto; 
+      max-height: 500px;
+      animation: gentle-float 6s ease-in-out infinite; 
+    }
+
+    .hero-right {
+      display: flex;
+      flex-direction: column;
+      gap: 25px;
+      align-items: center;
+      background: rgba(255, 255, 255, 0.05);
+      padding: 20px;
+      border-radius: 50px;
+      backdrop-filter: blur(5px);
+    }
+    .hero-right img { 
+      width: 70px; 
+      height: auto; 
+      filter: drop-shadow(0 4px 6px rgba(0,0,0,0.2)); 
+      transition: transform 0.3s ease;
+    }
+    .hero-right img:hover { transform: scale(1.1); }
+
+    .blob { position: absolute; background: rgba(255, 255, 255, 0.05); border-radius: 50%; animation: float 20s infinite ease-in-out; z-index: 0; }
+    .blob-1 { width: 400px; height: 400px; top: -100px; left: -100px; }
+    .blob-2 { width: 300px; height: 300px; bottom: -50px; right: -50px; animation-delay: -5s; }
+    @keyframes float { 0%, 100% { transform: translate(0, 0); } 50% { transform: translate(30px, 40px); } }
+    @keyframes gentle-float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
+
+    .btn { display: inline-block; padding: 14px 32px; border-radius: 50px; font-weight: 700; text-decoration: none; transition: all 0.3s ease; cursor: pointer; text-align: center; border: none; }
+    .btn-primary { background: var(--accent); color: #004d40; box-shadow: 0 10px 20px rgba(255, 193, 7, 0.3); }
+    .btn-primary:hover { transform: translateY(-3px); background: #ffca28; }
+    .btn-ghost { background: rgba(255,255,255,0.1); color: white; border: 1px solid rgba(255,255,255,0.3); backdrop-filter: blur(5px); }
+    .btn-ghost:hover { background: rgba(255,255,255,0.2); transform: translateY(-3px); }
+
+    .user-nav-profile { display: none; align-items: center; gap: 10px; background: rgba(255,255,255,0.2); padding: 5px 15px 5px 5px; border-radius: 50px; text-decoration: none; border: 1px solid rgba(255,255,255,0.4); transition: 0.3s; cursor: pointer; backdrop-filter: blur(5px); }
+    .user-nav-profile:hover { background: rgba(255,255,255,0.3); }
+    .user-nav-avatar { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: 2px solid var(--accent); }
+    .user-nav-text { color: white; font-weight: 600; font-size: 0.9rem; margin-right: 5px; }
+
+    @media (max-width: 992px) {
+      .hero-title { font-size: 2.2rem; }
+      
+      .hero { 
+        display: flex;
+        flex-direction: column-reverse;
+        text-align: center;
+        gap: 40px;
+        padding-top: 60px; 
+      }
+
+      .hero-right {
+        flex-direction: row; 
+        justify-content: center;
+        width: 100%;
+        background: transparent;
+        padding: 0;
+      }
+      .hero-right img { width: 60px; }
+
+      .hero-ctas { justify-content: center; }
+      
+      .site-nav { display: none; }
+      .mobile-menu-btn { display: block; }
+    }
+
+    .section-title { text-align: center; margin-bottom: 50px; }
+    .section-title h2 { font-size: 2.5rem; color: var(--text-main); margin-bottom: 10px; }
+    .section-title p { color: var(--text-muted); }
+    
+    .gallery-section { padding: 80px 20px; background: var(--bg-body); }
+    .gallery-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; max-width: 1100px; margin: 0 auto; }
+    @media(min-width: 768px) { .gallery-grid .main-photo { grid-column: span 2; grid-row: span 2; } }
+    .gallery-item { position: relative; border-radius: var(--radius); overflow: hidden; aspect-ratio: 4/3; box-shadow: var(--shadow-card); cursor: pointer; border: 1px solid var(--card-border); }
+    .gallery-item img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease; }
+    .gallery-item:hover img { transform: scale(1.05); }
+    .gallery-caption { position: absolute; bottom: 0; left: 0; right: 0; background: linear-gradient(to top, rgba(0,0,0,0.9), transparent); color: white; padding: 30px 20px 15px 20px; transform: translateY(100%); transition: transform 0.3s ease; }
+    .gallery-item:hover .gallery-caption { transform: translateY(0); }
+
+    .features-section { background: var(--bg-section-alt); padding: 80px 20px; transition: background 0.3s ease; }
+    .feature-container { max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; }
+    .feature-card { background: var(--bg-card); padding: 40px; border-radius: 20px; box-shadow: var(--shadow-card); transition: all 0.3s ease; border: 1px solid var(--card-border); }
+    .feature-card:hover { transform: translateY(-10px); border-color: var(--primary); }
+    .feature-icon { font-size: 2.5rem; margin-bottom: 20px; display: inline-block; padding: 15px; background: rgba(0, 137, 123, 0.1); border-radius: 12px; color: var(--primary); }
+    .feature-card h3 { font-size: 1.5rem; margin-bottom: 15px; color: var(--text-main); }
+    .feature-card p { color: var(--text-muted); font-size: 0.95rem; }
+
+    .rules-section { background-color: #0f172a; color: #fff; padding: 100px 20px; position: relative; }
+    .rules-section::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 6px; background: linear-gradient(90deg, var(--primary), var(--accent), var(--primary)); }
+    .rules-container { max-width: 900px; margin: 0 auto; }
+    .rules-block { text-align: center; margin-bottom: 80px; }
+    .rules-title { font-size: 2rem; font-weight: 800; margin-bottom: 20px; letter-spacing: -0.5px; color: #fff; }
+    .title-line { display: flex; justify-content: center; gap: 8px; margin-bottom: 40px; }
+    .line-dot { width: 40px; height: 6px; border-radius: 10px; }
+    .bg-yellow { background: var(--accent); }
+    .bg-blue { background: #4FC3F7; }
+    .rules-text { font-size: 1.15rem; color: #cbd5e1; max-width: 700px; margin: 0 auto 30px; }
+    .rules-card { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); padding: 30px; border-radius: 20px; backdrop-filter: blur(5px); margin-top: 30px; display: inline-block; max-width: 600px; }
+
+    .footer { background: #050b14; color: #64748b; text-align: center; padding: 40px 20px; font-size: 0.9rem; border-top: 1px solid rgba(255,255,255,0.05); }
+    .mic-wrapper { position: fixed; bottom: 90px; right: 20px; z-index: 1000; }
+    .btn-mic-float { width: 50px; height: 50px; border-radius: 50%; background: var(--primary); border: none; color: white; cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.3); display: flex; align-items: center; justify-content: center; transition: transform 0.2s, background 0.2s; }
+    .btn-mic-float:hover { transform: scale(1.1); background: var(--primary-dark); }
+    .btn-mic-float svg { width: 24px; height: 24px; fill: currentColor; }
+
+    /* CSS do Player Mantido aqui para garantir o estilo do HTML injetado */
+    .music-player {
+      position: fixed;
+      bottom: 20px;
+      left: 20px;
+      width: 300px;
+      background: rgba(14, 13, 13, 0.9); 
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 16px;
+      padding: 15px;
+      z-index: 9999;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+      transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .music-player.minimized {
+      transform: translateX(-240px);
+    }
+
+    .player-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+      padding-bottom: 8px;
+    }
+
+    .song-info {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      overflow: hidden;
+    }
+
+    .visualizer {
+      display: flex;
+      align-items: flex-end;
+      gap: 2px;
+      height: 15px;
+    }
+    .bar {
+      width: 3px;
+      background-color: var(--primary);
+      animation: bounce 1s infinite ease-in-out;
+      border-radius: 2px;
+    }
+    .bar:nth-child(1) { height: 6px; animation-duration: 0.6s; }
+    .bar:nth-child(2) { height: 10px; animation-duration: 0.8s; }
+    .bar:nth-child(3) { height: 14px; animation-duration: 0.5s; }
+    .bar:nth-child(4) { height: 8px; animation-duration: 0.7s; }
+    
+    .music-player.paused .bar { animation-play-state: paused; height: 3px; transition: height 0.3s; }
+
+    @keyframes bounce {
+      0%, 100% { height: 4px; }
+      50% { height: 100%; }
+    }
+
+    .song-title {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--text-main);
+      white-space: nowrap;
+    }
+
+    .toggle-minimize {
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      font-size: 1.2rem;
+      transition: color 0.3s;
+    }
+    .toggle-minimize:hover { color: var(--primary); }
+
+    .player-controls {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .ctrl-btn {
+      background: none;
+      border: none;
+      color: white;
+      cursor: pointer;
+      transition: transform 0.2s, color 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .ctrl-btn:hover { color: var(--primary); }
+    .ctrl-btn svg { width: 18px; height: 18px; fill: currentColor; }
+    
+    .play-btn {
+      width: 40px;
+      height: 40px;
+      background: var(--primary);
+      border-radius: 50%;
+      color: #004d40; 
+      box-shadow: 0 4px 10px rgba(5, 223, 52, 0.3);
+    }
+    .play-btn:hover { transform: scale(1.1); background: #04b92b; color: white; }
+    .play-btn svg { width: 16px; height: 16px; fill: currentColor; margin-left: 2px; } 
+    .play-btn.playing svg { margin-left: 0; }
+
+    .ctrl-small {
+      color: var(--text-muted);
+      opacity: 0.8;
+    }
+    .ctrl-small svg { width: 14px; height: 14px; }
+    .ctrl-small:hover { opacity: 1; transform: scale(1.1); }
+
+    .progress-container {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        width: 100%;
+        margin-top: 5px;
+    }
+    .time-text {
+        font-size: 0.7rem;
+        color: var(--text-muted);
+        min-width: 35px;
+        text-align: center;
+    }
+
+    .volume-container {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 5px;
+      border-top: 1px solid rgba(255,255,255,0.05);
+      padding-top: 5px;
+    }
+    
+    input[type=range] {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 100%;
+      background: transparent;
+    }
+    input[type=range]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      height: 10px;
+      width: 10px;
+      border-radius: 50%;
+      background: var(--primary);
+      cursor: pointer;
+      margin-top: -3px;
+    }
+    input[type=range]::-webkit-slider-runnable-track {
+      width: 100%;
+      height: 4px;
+      cursor: pointer;
+      background: rgba(255,255,255,0.2);
+      border-radius: 2px;
+    }
+    
+    @media (max-width: 768px) {
+        .music-player { width: 280px; bottom: 10px; left: 10px; }
+    }
+  </style>
+</head>
+
+<body>
+
+  <canvas id="snow"></canvas>
+  <div class="cursor-personalizado"></div>
+
+  <div class="mobile-backdrop" id="mobileBackdrop"></div>
+
+  <div class="mobile-menu-overlay" id="mobileMenu">
+    <a href="index.html" style="color:var(--primary);">Início</a>
+    <a href="quem-somos.html">Quem Somos</a>
+    <a href="entenda-problema.html">Problemas</a>
+    <a href="educacao.html">Educação</a> 
+    <a href="solucao.html">Soluções</a>
+    <a href="mapa-risco.html">Mapa</a>
+    <a href="quiz.html">Quiz</a>
+  </div>
+
+  <header class="hero-outer">
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+
+    <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Abrir Menu">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="3" y1="12" x2="21" y2="12"></line>
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <line x1="3" y1="18" x2="21" y2="18"></line>
+        </svg>
+    </button>
+
+    <nav class="site-nav" role="navigation">
+      <a href="index.html" style="color:var(--primary);">Início</a>
+      <a href="quem-somos.html">Quem Somos</a>
+      <a href="entenda-problema.html">Problemas</a>
+      <a href="educacao.html">Educação</a> 
+      <a href="solucao.html">Soluções</a>
+      <a href="mapa-risco.html">Mapa</a>
+      <a href="quiz.html">Quiz</a>
+    </nav>
+
+    <div class="hero">
+      
+      <div class="hero-left">
+        <h1 class="hero-title">Projeto Aliança Drenante</h1>
+        <p class="hero-sub">Transformando a drenagem urbana com conscientização, dados e tecnologia no IFRN Zona Norte.</p>
+
+        <div class="hero-ctas">
+          <a class="btn btn-primary" href="#nossa-jornada">Conhecer Agora</a>
+          
+          <a id="nav-login-btn" class="btn btn-ghost" href="login.html">Área do Aluno</a>
+
+          <a id="nav-user-profile" class="user-nav-profile" href="perfil.html">
+            <img id="nav-user-avatar" class="user-nav-avatar" src="" alt="User">
+            <span class="user-nav-text" id="user-name-span">Minha Conta</span>
+          </a>
+
+          <button id="themeToggle" class="btn btn-ghost" style="padding: 12px 16px; font-size:1.2rem;" aria-label="Alternar Tema">🌙</button>
+        </div>
+      </div>
+
+      <div class="hero-center">
+        <img src="assets/logo.png" alt="Ilustração Principal do Projeto Aliança Drenante">
+      </div>
+
+      <div class="hero-right">
+        <img src="assets/logo2.png" alt="Logo Lateral">
+        <img src="assets/image.png" alt="Logo Principal">
+        <img src="assets/aliança.jpg" alt="Logo Lateral">
+        <img src="assets/if.png" alt="Logo Lateral">
+      </div>
+
+    </div>
+  </header>
+
+  <main id="content">
+
+    <section id="nossa-jornada" class="gallery-section reveal">
+      <div class="section-title">
+        <h2>Nossa Jornada</h2>
+        <p>Dos estudos em sala de aula até a aplicação prática em campo.</p>
+      </div>
+      
+      <div class="gallery-grid">
+        <div class="gallery-item main-photo">
+          <img src="https://shrill-ivory-zsh1hypy33.edgeone.app/fd253d35-ccf2-42f2-bca5-0c75dc3ac534.jpg" alt="Planejamento">
+          <div class="gallery-caption">
+            <strong>Equipe</strong><br>Onde tudo começou, definindo as metas do Durmsgeo.
+          </div>
+        </div>
+        
+        <div class="gallery-item">
+           <img src="https://sufficient-scarlet-wu45ukblde.edgeone.app/a33fd410-2c49-4863-ab6f-b75ab48b327a.jpg" alt="Visita técnica">
+           <div class="gallery-caption">Visita Técnica</div>
+        </div>
+        
+        <div class="gallery-item">
+           <img src="https://rubber-beige-m2ardczss2.edgeone.app/e2bb3de6-34af-46f8-907b-34d922c6aaae.jpg" alt="Análise">
+           <div class="gallery-caption">Equipe Reunida</div>
+        </div>
+        
+        <div class="gallery-item">
+           <img src="https://open-copper-rgq7lxbfnh.edgeone.app/00964ed9-20ca-4148-932a-ca0419507f6c.jpg" alt="Web Design">
+           <div class="gallery-caption">Reorganizando o projeto</div>
+        </div>
+        
+        <div class="gallery-item">
+           <img src="https://exact-coral-ydy6wtebqt.edgeone.app/4625b184-da1e-4f63-9b8b-b41497cd5e28.jpg" alt="Planejamento">
+           <div class="gallery-caption">Planejamento Estratégico</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="features-section reveal">
+      <div class="feature-container">
+        
+        <div class="feature-card">
+          <div class="feature-icon">🔍</div>
+          <h3>O que é a Interligando Saberes?</h3>
+          <p>Um evento de culminância do MEG mundo encantado da geografia.</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">🗺️</div>
+          <h3>Mapa de Risco</h3>
+          <p>Explore nosso mapa interativo. Visualize áreas afetadas, indicadores importantes e dados geográficos essenciais.</p>
+          <a href="mapa-risco.html" style="color:var(--primary); font-weight:700; text-decoration:none; margin-top:10px; display:block;">Acessar Mapa &rarr;</a>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">📚</div>
+          <h3>Educação Ambiental</h3>
+          <p>Conteúdos educativos para compreender as causas dos problemas e como a comunidade pode agir para preveni-los.</p>
+          <a href="educacao.html" style="color:var(--primary); font-weight:700; text-decoration:none; margin-top:10px; display:block;">Ler Materiais &rarr;</a>
+        </div>
+
+      </div>
+    </section>
+
+    <section class="rules-section reveal">
+      <div class="rules-container">
+        
+        <div class="rules-block">
+          <h2 class="rules-title">Como Funciona a Aliança?</h2>
+          <div class="title-line">
+            <span class="line-dot bg-yellow"></span>
+            <span class="line-dot bg-blue"></span>
+          </div>
+          
+          <p class="rules-text">
+            A plataforma utiliza <strong>gamificação</strong> para trazer as informações necessárias para a comunidade.
+          </p>
+          
+          <img src="https://www.mundomeg.com.br/images/illustration-home-2.svg" alt="Ilustração Gamificação" style="max-width: 300px; margin: 20px auto;">
+          
+          <div class="rules-card">
+            <h3 style="color: var(--accent); margin-bottom: 10px;">🎮 Regras Dinâmicas</h3>
+            <p style="font-size: 0.95rem; opacity: 0.8;">Em desenvolvimento.</p>
+          </div>
+        </div>
+
+        <div style="height: 1px; background: rgba(255,255,255,0.1); width: 100%; margin: 60px 0;"></div>
+
+        <div class="rules-block">
+          <h2 class="rules-title">Diretrizes de Uso</h2>
+          <div class="title-line">
+            <span class="line-dot bg-yellow"></span>
+            <span class="line-dot bg-blue"></span>
+          </div>
+
+          <div style="background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.3); padding: 25px; border-radius: 16px; text-align: left; max-width: 600px; margin: 0 auto;">
+            <p style="margin-bottom: 10px; color: #fca5a5;">🚫 <strong>Proibido:</strong> Utilizar e-mail de terceiros para ingressar nas turmas.</p>
+            <p style="margin-bottom: 0; color: #fca5a5;">🚫 <strong>Proibido:</strong> Utilizar meios ilícitos ou trapaças na plataforma.</p>
+          </div>
+
+          <img src="https://www.mundomeg.com.br/images/rules-section.svg" alt="Ilustração Estudos" style="max-width: 300px; margin: 40px auto 20px;">
+
+          <div class="rules-card">
+            <h3 style="color: #4FC3F7; margin-bottom: 10px;">🏆 Premiações</h3>
+            <p style="font-size: 0.95rem; opacity: 0.8;">...</p>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <p>© 2025 IFRN - Durmsgeo · <strong>Projeto Aliança Drenante</strong></p>
+      <p style="font-size: 0.8rem; margin-top: 5px; opacity: 0.6;">Desenvolvido com propósitos educacionais.</p>
+    </div>
+  </footer>
+
+  <div class="mic-wrapper">
+    <button class="btn-mic-float" id="btn-mic-speak" title="Ouvir o conteúdo">
+      <svg viewBox="0 0 24 24"><path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z"/><path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z"/></svg>
+    </button>
+  </div>
+
+  <div class="accessibility-wrapper">
+    <button class="accessibility-main" onclick="toggleAccessibilityMenu()" aria-label="Acessibilidade">
+      <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor"><path d="M12 2c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2zm9 7h-6v13h-2v-6h-2v6H9V9H3V7h18v2z"/></svg>
+    </button>
+    <div class="accessibility-menu">
+      <button onclick="changeZoom(0.1)">A+</button>
+      <button onclick="changeZoom(-0.1)">A-</button>
+    </div>
+  </div>
+
+  <div id="player-container"></div>
+
+  <script src="js/script.js" defer></script>
+  <script src="js/player-musica.js" defer></script>
+  
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      
+      // Lógica de Usuário e Login (Mantida)
+      const userDataString = localStorage.getItem("user_data");
+      const loginBtn = document.getElementById("nav-login-btn");
+      const profileBtn = document.getElementById("nav-user-profile");
+      const avatarImg = document.getElementById("nav-user-avatar");
+      const userNameSpan = document.getElementById("user-name-span");
+
+      if (userDataString) {
+        try {
+          const user = JSON.parse(userDataString);
+          console.log("Usuário logado:", user);
+
+          if (loginBtn) loginBtn.style.display = "none";
+
+          if (profileBtn) {
+             profileBtn.style.display = "flex"; 
+             
+             if (userNameSpan && user.nome) {
+               userNameSpan.innerText = user.nome.split(" ")[0];
+             }
+
+             if (avatarImg) {
+               avatarImg.src = user.foto || "https://cdn-icons-png.flaticon.com/512/3135/3135715.png";
+             }
+          }
+
+        } catch (e) {
+          console.error("Erro ao ler dados do usuário:", e);
+          localStorage.removeItem("user_data");
+          if (loginBtn) loginBtn.style.display = "inline-block";
+          if (profileBtn) profileBtn.style.display = "none";
+        }
+
+      } else {
+        if (loginBtn) loginBtn.style.display = "inline-block";
+        if (profileBtn) profileBtn.style.display = "none";
+      }
+
+      // Lógica do Menu Mobile (Mantida)
+      const menuBtn = document.getElementById('mobileMenuBtn');
+      const mobileMenu = document.getElementById('mobileMenu');
+      const backdrop = document.getElementById('mobileBackdrop');
+
+      function toggleMenu() {
+        mobileMenu.classList.toggle('active');
+        backdrop.classList.toggle('active');
+      }
+
+      if(menuBtn) {
+        menuBtn.addEventListener('click', toggleMenu);
+      }
+      if(backdrop) {
+        backdrop.addEventListener('click', toggleMenu);
+      }
+      
+      const mobileLinks = mobileMenu.querySelectorAll('a');
+      mobileLinks.forEach(link => {
+        link.addEventListener('click', () => {
+              if(mobileMenu.classList.contains('active')) toggleMenu();
+        });
+      });
+
+      // Lógica do Music Player removida daqui e movida para js/player-musica.js
+    });
+  </script>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getFirestore, doc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyBEOpVc1EskZVgGkaegdKzA_WOk5C2qfO8",
+        authDomain: "dursmsge0.firebaseapp.com",
+        projectId: "dursmsge0",
+        storageBucket: "dursmsge0.firebasestorage.app",
+        messagingSenderId: "874076135664",
+        appId: "1:874076135664:web:b04b0fa32c0a09948f2235"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    
+    const ADMIN_EMAILS = ['gabrielmiller820@gmail.com', 'admin@durmsgeo.com'];
+    
+    onSnapshot(doc(db, "config", "geral"), (docSnap) => {
+        if (docSnap.exists()) {
+            const data = docSnap.data();
+            
+            const user = JSON.parse(localStorage.getItem('user_data'));
+            const isUserAdmin = user && ADMIN_EMAILS.includes(user.email.toLowerCase());
+
+            if (data.manutencao === true && !isUserAdmin) {
+                document.body.innerHTML = `
+                    <div style="height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; background: #0f172a; color: white; font-family: sans-serif; text-align: center; padding: 20px;">
+                        <h1 style="font-size: 3rem; margin-bottom: 20px;">🚧 Site em Manutenção</h1>
+                        <p style="font-size: 1.2rem; color: #94a3b8;">Estamos fazendo melhorias no Durmsgeo.</p>
+                        <p>Volte em alguns instantes!</p>
+                    </div>
+                `;
+            }
+        }
+    });
+  </script>
+
+</body>
+</html>
