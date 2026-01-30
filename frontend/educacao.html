@@ -41,6 +41,7 @@
 
     .container { max-width: 1100px; margin: 0 auto; padding: 0 20px; }
 
+    /* --- HAMBURGUER MENU --- */
     .hamburger {
         display: none; 
         position: fixed;
@@ -130,6 +131,117 @@
     .edu-card h3 { color: var(--primary); margin-bottom: 15px; font-size: 1.3rem; display: flex; align-items: center; gap: 10px; }
     .edu-card p { color: var(--text-muted); font-size: 0.95rem; }
 
+    /* =========================================
+       NOVOS ESTILOS DO SISTEMA DE VÍDEOS
+       ========================================= */
+    .video-showcase {
+        position: relative;
+        display: flex;
+        align-items: center;
+        gap: 40px;
+        background: rgba(255, 255, 255, 0.03);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-top: 1px solid rgba(255, 255, 255, 0.4);
+        border-bottom: 1px solid rgba(0, 0, 0, 0.4);
+        padding: 40px;
+        border-radius: 24px;
+        margin-bottom: 60px;
+        transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+        z-index: 10;
+    }
+
+    .video-showcase:last-child { margin-bottom: 0; }
+
+    .video-showcase:hover {
+        transform: scale(1.02) translateY(-5px);
+        box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+        border-top-color: rgba(255, 255, 255, 0.8);
+    }
+
+    .video-showcase::before {
+        content: '';
+        position: absolute;
+        width: 250px; height: 250px;
+        border-radius: 50%;
+        background: var(--glow-color, var(--primary));
+        filter: blur(90px);
+        opacity: 0.2;
+        z-index: -1;
+        top: 50%; transform: translateY(-50%);
+        left: -50px;
+        transition: opacity 0.4s ease;
+    }
+    .video-showcase:hover::before { opacity: 0.45; }
+    .video-showcase.reverse::before { left: auto; right: -50px; }
+
+    .video-frame-wrapper {
+        flex: 0 0 320px;
+        height: 570px;
+        border-radius: 16px;
+        overflow: hidden;
+        box-shadow: 0 15px 40px rgba(0,0,0,0.6);
+        border: 2px solid rgba(255,255,255,0.1);
+        background: #000;
+        transition: all 0.4s ease;
+        position: relative;
+        z-index: 2;
+    }
+    .video-frame-wrapper iframe { width: 100%; height: 100%; }
+
+    .video-showcase:hover .video-frame-wrapper {
+        border-color: var(--glow-color, var(--primary));
+        box-shadow: 0 0 25px var(--glow-color, var(--primary));
+    }
+
+    .video-content { flex: 1; }
+
+    .badge-info {
+        display: inline-flex; align-items: center; gap: 8px;
+        padding: 6px 16px; border-radius: 50px;
+        font-size: 0.8rem; font-weight: 700; letter-spacing: 0.5px;
+        text-transform: uppercase; margin-bottom: 15px;
+        border: 1px solid rgba(255,255,255,0.1);
+        backdrop-filter: blur(4px);
+    }
+    
+    .pulse-icon { display: inline-block; animation: pulse 2s infinite ease-in-out; }
+    @keyframes pulse { 
+        0% { transform: scale(1); opacity: 1; } 
+        50% { transform: scale(1.3); opacity: 0.7; } 
+        100% { transform: scale(1); opacity: 1; } 
+    }
+
+    .video-content h3 {
+        font-size: 2rem; color: var(--text-main); margin-bottom: 20px;
+        padding-bottom: 10px; display: block;
+    }
+
+    .video-content p { font-size: 1.1rem; color: var(--text-muted); margin-bottom: 25px; }
+
+    .highlight-box {
+        background: transparent;
+        padding: 15px 0;
+        border-top: 1px solid rgba(255,255,255,0.1);
+    }
+    .highlight-box strong { color: var(--text-main); display: block; margin-bottom: 5px; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px; }
+
+    .glow-green { --glow-color: #05df34; }
+    .glow-yellow { --glow-color: #FFC107; }
+    .glow-blue { --glow-color: #2979ff; }
+
+    @media (max-width: 900px) {
+        .video-showcase { flex-direction: column !important; text-align: center; padding: 30px 20px; }
+        .video-showcase::before { left: 50%; top: 50%; transform: translate(-50%, -50%); width: 200px; height: 200px; }
+        .video-frame-wrapper { width: 100%; max-width: 320px; height: 570px; margin: 0 auto; }
+        .badge-info { margin: 0 auto 15px auto; }
+        .highlight-box { text-align: left; }
+    }
+
+    /* --- FIM DOS ESTILOS DE VÍDEO --- */
+
+
     .action-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin-top: 40px; }
     .action-box {
       background: var(--bg-card); padding: 25px; border-radius: 12px;
@@ -189,7 +301,7 @@
     .flip-card {
       background-color: transparent;
       width: 100%;
-      height: 400px; /* Aumentado um pouco para caber o texto extra */
+      height: 400px;
       perspective: 1000px;
     }
     .flip-inner {
@@ -351,6 +463,70 @@
 
     <section class="section section-alt">
         <div class="container">
+            <h2>Processos Naturais Explicados</h2>
+            <p style="color: #ccc; margin-bottom: 60px;">Entenda os conceitos geológicos e impactos que afetam o nosso bairro.</p>
+
+            <div class="video-showcase glow-green">
+                <div class="video-frame-wrapper">
+                    <iframe src="https://www.youtube.com/embed/OFmmkRYkqeE" title="Lixiviação" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                </div>
+                <div class="video-content">
+                    <div class="badge-info" style="background: rgba(5, 223, 52, 0.15); color: #05df34;">
+                        <span class="pulse-icon">💧</span> Processo Químico
+                    </div>
+
+                    <h3>Lixiviação</h3>
+                    <p>Você já notou como a terra fica "lavada" depois de muita chuva? Esse processo é a lixiviação. A água penetra no solo e carrega os nutrientes essenciais para as camadas mais profundas.</p>
+                    
+                    <div class="highlight-box">
+                        <strong>Impacto Local</strong>
+                        <p style="font-size:0.95rem; color: #ccc;">Solo pobre tem menos vegetação, o que facilita a erosão e o acúmulo de terra nas ruas, entupindo bueiros.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="video-showcase glow-yellow reverse" style="flex-direction: row-reverse;"> 
+                <div class="video-frame-wrapper">
+                    <iframe src="https://www.youtube.com/embed/mRGuViwk_tQ" title="Intemperismo" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                </div>
+                <div class="video-content">
+                    <div class="badge-info" style="background: rgba(255, 193, 7, 0.15); color: #FFC107;">
+                        <span class="pulse-icon">☀️</span> Desgaste Físico
+                    </div>
+
+                    <h3>Intemperismo</h3>
+                    <p>O Intemperismo é o "envelhecimento" das rochas e materiais. Sol forte, chuva ácida e mudanças de temperatura quebram as rochas e o asfalto ao longo do tempo.</p>
+                    
+                    <div class="highlight-box">
+                        <strong>Impacto Local</strong>
+                        <p style="font-size:0.95rem; color: #ccc;">Esse desgaste cria buracos nas ruas. Quando chove, esses buracos viram poças enormes e criam acúmulo de água parada.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="video-showcase glow-blue">
+                <div class="video-frame-wrapper">
+                    <iframe src="https://www.youtube.com/embed/NCyaOQkPdgk" title="Impermeabilização" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                </div>
+                <div class="video-content">
+                    <div class="badge-info" style="background: rgba(41, 121, 255, 0.15); color: #2979ff;">
+                        <span class="pulse-icon">🧱</span> Ação Humana
+                    </div>
+
+                    <h3>Impermeabilização</h3>
+                    <p>É o que acontece quando cobrimos o chão com muito cimento e asfalto. A água da chuva não tem para onde descer (infiltrar na terra) e corre toda por cima da rua.</p>
+                    
+                    <div class="highlight-box">
+                        <strong>Impacto Local</strong>
+                        <p style="font-size:0.95rem; color: #ccc;">Sem solo exposto para absorver a água, qualquer chuva média causa enxurradas rápidas, invadindo casas.</p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+    <section class="section">
+        <div class="container">
             <h2>Tópicos Importantes</h2>
             <p style="color: #ccc; margin-bottom: 40px;">Selecione uma aba para ver orientações baseadas nas cartilhas do CFQ.</p>
 
@@ -487,7 +663,7 @@
         </div>
     </section>
 
-    <section id="guia" class="section">
+    <section id="guia" class="section section-alt">
       <div class="container">
         <h2>Guia de Sobrevivência</h2>
         <div class="action-grid">
@@ -523,7 +699,7 @@
       </div>
     </section>
 
-    <section class="section section-alt">
+    <section class="section">
       <div class="container">
         <div class="map-cta">
           <h2>Monitore sua Região</h2>
